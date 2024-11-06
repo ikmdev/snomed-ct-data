@@ -45,6 +45,7 @@
         <composer.version>1.5.0</composer.version>
         <tinkar-starter-data.version>1.0.0</tinkar-starter-data.version>
         <tinkar-core.version>1.76.0</tinkar-core.version>
+        <integration.version>1.76.0</integration.version>
     </properties>
 
     <dependencyManagement>
@@ -53,6 +54,11 @@
                 <groupId>dev.ikm.tinkar</groupId>
                 <artifactId>composer</artifactId>
                 <version>${composer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>integration</artifactId>
+                <version>${integration.version}</version>
             </dependency>
             <dependency>
                 <groupId>dev.ikm.tinkar</groupId>
