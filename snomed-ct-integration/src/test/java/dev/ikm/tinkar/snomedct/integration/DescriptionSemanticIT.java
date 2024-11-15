@@ -127,7 +127,8 @@ public class DescriptionSemanticIT {
             Latest<SemanticEntityVersion> latestDescriptionSemantic = stampCalc.latest(semanticVersion);
             if (latestDescriptionSemantic.isPresent()) {
                 Component descriptionType = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_TYPE, latestDescriptionSemantic.get());
-                if (PublicId.equals(descriptionType.publicId(), nameType)) {
+                Component caseSensitivity = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.DESCRIPTION_CASE_SIGNIFICANCE, latestDescriptionSemantic.get());
+                if (PublicId.equals(descriptionType.publicId(), nameType) && PublicId.equals(caseSensitivity.publicId(), caseSensitive)) {
                     String text = latestDescriptionPattern.getFieldWithMeaning(TinkarTerm.TEXT_FOR_DESCRIPTION, latestDescriptionSemantic.get());
                     if (text.contains(term)) {
                         actualFqn.set(text);
