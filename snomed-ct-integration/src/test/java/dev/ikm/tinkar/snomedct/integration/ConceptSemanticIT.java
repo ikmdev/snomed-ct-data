@@ -50,7 +50,7 @@ public class ConceptSemanticIT {
      */
     @Test
     public void testConceptSemantics() throws IOException {
-        String sourceFilePath = System.getProperty("user.home") + "/data/SnomedCT_InternationalRF2_PRODUCTION_20240201T120000Z/Full/Terminology/sct2_Concept_Full_INT_20240201.txt";
+        String sourceFilePath = System.getProperty("user.home") + "/data/SnomedCT_InternationalRF2_PRODUCTION_20241001T120000Z/Full/Terminology/sct2_Concept_Full_INT_20241001.txt";
         String errorFile = "target/failsafe-reports/concepts_not_found.txt";
         int notFound = 0;
 
