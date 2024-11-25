@@ -48,7 +48,6 @@ public class ConceptSemanticIT {
                 long effectiveTime = SnomedUtility.snomedTimestampToEpochSeconds(columns[1]);
                 StateSet descriptionStatus = Integer.parseInt(columns[2]) == 1 ? StateSet.ACTIVE : StateSet.INACTIVE;
                 EntityProxy.Concept moduleId = EntityProxy.Concept.make(PublicIds.of(UuidUtil.fromSNOMED(columns[3])));
-                EntityProxy.Concept definitionStatus = EntityProxy.Concept.make(PublicIds.of(UuidUtil.fromSNOMED(columns[4])));
 
             }
         }
