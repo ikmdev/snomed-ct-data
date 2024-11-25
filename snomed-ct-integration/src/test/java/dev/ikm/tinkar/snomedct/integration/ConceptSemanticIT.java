@@ -66,7 +66,7 @@ public class ConceptSemanticIT {
                 //pass these args in assertion method
                 UUID id = UuidUtil.fromSNOMED(columns[0]);
                 long effectiveTime = SnomedUtility.snomedTimestampToEpochSeconds(columns[1]);
-                StateSet descriptionStatus = Integer.parseInt(columns[2]) == 1 ? StateSet.ACTIVE : StateSet.INACTIVE;
+                StateSet conceptStatus = Integer.parseInt(columns[2]) == 1 ? StateSet.ACTIVE : StateSet.INACTIVE;
                 EntityProxy.Concept moduleId = EntityProxy.Concept.make(PublicIds.of(UuidUtil.fromSNOMED(columns[3])));
 
 //                if (!assertConcept(id, term, descriptionType, caseSensitivityConcept, effectiveTime, descriptionStatus)) {
