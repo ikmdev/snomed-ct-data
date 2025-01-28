@@ -1,12 +1,9 @@
 package dev.ikm.maven;
 
 import dev.ikm.tinkar.common.id.PublicIds;
-import dev.ikm.tinkar.common.util.uuid.UuidUtil;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
-import dev.ikm.tinkar.entity.Entity;
-import dev.ikm.tinkar.entity.EntityVersion;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import org.slf4j.Logger;
@@ -15,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -37,11 +32,10 @@ public class LanguageTransformer extends AbstractTransformer {
     /**
      * This method uses a language file and transforms it into a list of entities
      * @param languageFile
-     * @Returns EntityList
+     * @param composer
      */
     @Override
     public void transform(File languageFile, Composer composer) {
-        List<Entity<? extends EntityVersion>> semantics = new ArrayList<>();
         EntityProxy.Concept author = SnomedUtility.getUserConcept(namespace);
         EntityProxy.Concept path = SnomedUtility.getPathConcept();
 
@@ -51,9 +45,8 @@ public class LanguageTransformer extends AbstractTransformer {
                     .forEach((data) -> {
                         State status = Integer.parseInt(data[ACTIVE]) == 1 ? State.ACTIVE : State.INACTIVE;
                         long epochTime = SnomedUtility.snomedTimestampToEpochSeconds(data[EFFECTIVE_TIME]);
-                        EntityProxy.Concept moduleId = EntityProxy.Concept.make(PublicIds.of(UuidUtil.fromSNOMED(data[MODULE_ID])));
-
-                        EntityProxy.Concept referencedComponent = EntityProxy.Concept.make(PublicIds.of(UuidUtil.fromSNOMED(data[REFERENCED_COMPONENT_ID])));
+                        EntityProxy.Concept moduleId = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[MODULE_ID])));
+                        EntityProxy.Concept referencedComponent = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[REFERENCED_COMPONENT_ID])));
 
                         Session session = composer.open(status, epochTime, author, moduleId, path);
                         session.compose((SemanticAssembler semanticAssembler) -> semanticAssembler
