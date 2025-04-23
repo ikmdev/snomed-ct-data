@@ -17,12 +17,6 @@ public class SnomedDataBuilderIT extends AbstractIntegrationTest{
     private static final Logger LOG = LoggerFactory.getLogger(SnomedDataBuilderIT.class);
 
     @Test
-    public void builderTests() throws Exception {
-        statedPattern();
-        count();
-        build();
-    }
-
     public void statedPattern() throws Exception {
         ViewCalculator viewCalculator = getViewCalculator();
         LogicCoordinateRecord logicCoordinateRecord = viewCalculator.logicCalculator().logicCoordinateRecord();
@@ -30,6 +24,7 @@ public class SnomedDataBuilderIT extends AbstractIntegrationTest{
                 logicCoordinateRecord.statedAxiomsPatternNid());
     }
 
+    @Test
     public void count() throws Exception {
         ViewCalculator viewCalculator = getViewCalculator();
         AtomicInteger cnt = new AtomicInteger();
@@ -55,6 +50,7 @@ public class SnomedDataBuilderIT extends AbstractIntegrationTest{
         assertEquals(inactive_count, inactive_cnt.intValue());
     }
 
+    @Test
     public void build() throws Exception {
         ElkSnomedData data = buildSnomedData();
         assertEquals(active_count, data.getActiveConceptCount());
