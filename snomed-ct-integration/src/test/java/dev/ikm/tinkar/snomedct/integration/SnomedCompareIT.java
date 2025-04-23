@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class SnomedCompareIT extends AbstractIntegrationTest{
 
-    private static final Logger LOG = LoggerFactory.getLogger(SnomedDataBuilderIT.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SnomedCompareIT.class);
 
     @Test
     public void compareTests() throws Exception {
