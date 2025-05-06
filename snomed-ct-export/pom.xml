@@ -20,20 +20,22 @@
         <data-artifact.groupId>dev.ikm.tinkar.data</data-artifact.groupId>
         <data-artifact.artifactId>snomedct-international</data-artifact.artifactId>
         <data-artifact.filename>${data-artifact.path-prefix}-data.zip</data-artifact.filename>
-        <data-artifact.version>20250401T120000Z-1.0.12</data-artifact.version>
+        <data-artifact.version>${source.version}-1.0.12</data-artifact.version>
         <data-artifact.prefix>${project.artifactId}-${project.version}</data-artifact.prefix>
         <data-artifact.path-prefix>${project.basedir}/${data-artifact.prefix}</data-artifact.path-prefix>
         <deploymentFiles>${project.basedir}/pom.xml</deploymentFiles>
         <deploymentClassifiers>reasoned-sa</deploymentClassifiers>
         <deploymentTypes>xml</deploymentTypes>
+        <deployNexusURL>https://nexus.tinkarbuild.com/repository/private-assets/</deployNexusURL>
         <deployToNexus>false</deployToNexus>
     </properties>
 
+    <!-- Distribution info for private assets repo in Nexus -->
     <distributionManagement>
         <repository>
             <id>nexus</id>
             <name>private-assets-nexus</name>
-            <url>https://nexus.tinkarbuild.com/repository/private-assets/</url>
+            <url>${deployNexusURL}</url>
         </repository>
     </distributionManagement>
 
@@ -134,7 +136,7 @@
                                 </goals>
                                 <configuration>
                                     <repositoryId>nexus</repositoryId>
-                                    <url>https://nexus.tinkarbuild.com/repository/private-assets/</url>
+                                    <url>${deployNexusURL}</url>
                                     <groupId>${data-artifact.groupId}</groupId>
                                     <artifactId>${data-artifact.artifactId}</artifactId>
                                     <version>${data-artifact.version}</version>
