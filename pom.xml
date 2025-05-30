@@ -17,7 +17,7 @@
 
     <name>SNOMED CT Data</name>
 
-    <!-- <modules>
+    <modules>
         <module>snomed-ct-origin</module>
         <module>plugin</module>
         <module>snomed-ct-starterdata</module>
@@ -27,7 +27,7 @@
         <module>snomed-ct-reasoner</module>
         <module>snomed-ct-integration</module>
         <module>snomed-ct-export</module>
-    </modules> -->
+    </modules>
 
     <properties>
         <!-- maven plugins -->
