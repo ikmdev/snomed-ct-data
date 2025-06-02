@@ -1,6 +1,6 @@
 package dev.ikm.tinkar.snomedct.integration;
 
-import dev.ikm.elk.snomed.test.SnomedVersionUs;
+import dev.ikm.elk.snomed.test.SnomedVersion;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SnomedElkSnomedClassifierTestIT extends ElkSnomedClassifierTestBase implements SnomedVersionUs {
+public class SnomedElkSnomedClassifierTestIT extends ElkSnomedClassifierTestBase implements SnomedVersion {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedElkSnomedClassifierTestIT.class);
 
@@ -23,8 +23,9 @@ public class SnomedElkSnomedClassifierTestIT extends ElkSnomedClassifierTestBase
 
     @BeforeAll
     public static void startPrimitiveData() {
-        origin = IntegrationTestUtils.findOriginPath("SnomedCT_ManagedService").resolve("Snapshot", "Terminology");
-        ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, new File("../target/snomedct-us")); // TODO handle INTL
+        origin = IntegrationTestUtils.findOriginPath("SnomedCT_").resolve("Snapshot", "Terminology");
+        String edition = IntegrationTestUtils.isOriginInternational(origin) ? "international" : "us";
+        ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, new File("../target/snomedct-" + edition));
         PrimitiveData.selectControllerByName("Open SpinedArrayStore");
         PrimitiveData.start();
     }
@@ -44,6 +45,11 @@ public class SnomedElkSnomedClassifierTestIT extends ElkSnomedClassifierTestBase
     @Override
     public String getEdition() {
         return IntegrationTestUtils.findEditionFromOrigin(origin);
+    }
+
+    @Override
+    public String getEditionDir() {
+        return ""; // Not used
     }
 
     @Override

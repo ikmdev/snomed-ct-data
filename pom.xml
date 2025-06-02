@@ -46,6 +46,18 @@
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>snomedct-us</dataStore>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>international</id>
+            <properties>
+                <source.version>20250501T120000Z</source.version>
+                <source.zip>${user.home}/Downloads/SnomedCT_InternationalRF2_PRODUCTION_${source.version}.zip</source.zip>
+                <dataStore>snomedct-international</dataStore>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
