@@ -48,10 +48,6 @@ public final class IntegrationTestUtils {
                 .orElseThrow(() -> new RuntimeException("findVersionFromOrigin failed to determine version from origin: " + origin));
     }
 
-    public static boolean isOriginInternational(Path origin) {
-        return origin.toString().contains("International");
-    }
-
     private static Optional<File> findMatchingFile(Path directory, String fileName) {
         try (Stream<Path> stream = Files.list(directory)
                 .filter(path -> path.toFile().getName().startsWith(fileName))) {

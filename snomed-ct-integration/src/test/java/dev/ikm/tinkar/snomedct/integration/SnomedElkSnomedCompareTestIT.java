@@ -24,8 +24,9 @@ public class SnomedElkSnomedCompareTestIT extends ElkSnomedClassifierTestBase im
 	@BeforeAll
 	public static void startPrimitiveData() {
 		origin = IntegrationTestUtils.findOriginPath("SnomedCT_").resolve("Snapshot", "Terminology");
-		String edition = IntegrationTestUtils.isOriginInternational(origin) ? "international" : "us";
-		ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, new File("../target/snomedct-" + edition));
+		File datastorePath = new File(System.getProperty("datastorePath"));
+		LOG.info("datastorePath: {}", datastorePath);
+		ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastorePath);
 		PrimitiveData.selectControllerByName("Open SpinedArrayStore");
 		PrimitiveData.start();
 	}

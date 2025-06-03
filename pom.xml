@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.ikm.tinkar</groupId>
         <artifactId>snomed-ct-data-bom</artifactId>
-        <version>1.10.0</version>
+        <version>1.13.0-IKDT-923-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -39,24 +39,13 @@
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <!-- origin -->
         <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>
-        <source.version>20250301T120000Z</source.version>
-        <source.zip>${user.home}/Downloads/SnomedCT_ManagedServiceUS_PRODUCTION_US1000124_${source.version}.zip</source.zip>
+        <source.version>20250501T120000Z</source.version>
+        <source.zip>${user.home}/Downloads/SnomedCT_InternationalRF2_PRODUCTION_${source.version}.zip</source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
         <starterSet>FieldCategories-nonprimordial-unreasoned-pb.zip</starterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
-        <dataStore>snomedct-us</dataStore>
+        <dataStore>snomedct-international</dataStore>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>international</id>
-            <properties>
-                <source.version>20250501T120000Z</source.version>
-                <source.zip>${user.home}/Downloads/SnomedCT_InternationalRF2_PRODUCTION_${source.version}.zip</source.zip>
-                <dataStore>snomedct-international</dataStore>
-            </properties>
-        </profile>
-    </profiles>
 
     <dependencyManagement>
         <dependencies>
@@ -154,6 +143,16 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>reasoner-elk-snomed-test</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.elk</groupId>
+                <artifactId>elk-snomed-test</artifactId>
+                <version>0.38.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
