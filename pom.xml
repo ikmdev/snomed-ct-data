@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.ikm.tinkar</groupId>
         <artifactId>snomed-ct-data-bom</artifactId>
-        <version>1.13.0-IKDT-923-SNAPSHOT</version>
+        <version>1.13.0</version>
         <relativePath/>
     </parent>
 
