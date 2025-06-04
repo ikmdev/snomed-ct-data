@@ -6,7 +6,7 @@
     <parent>
         <groupId>dev.ikm.tinkar</groupId>
         <artifactId>snomed-ct-data-bom</artifactId>
-        <version>1.10.0</version>
+        <version>1.13.0</version>
         <relativePath/>
     </parent>
 
@@ -46,6 +46,7 @@
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>snomedct-international</dataStore>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -142,6 +143,16 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.tinkar</groupId>
+                <artifactId>reasoner-elk-snomed-test</artifactId>
+                <version>${tinkar-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.elk</groupId>
+                <artifactId>elk-snomed-test</artifactId>
+                <version>0.38.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
