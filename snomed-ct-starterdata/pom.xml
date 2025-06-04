@@ -92,30 +92,29 @@
                     </execution>
                 </executions>
             </plugin>
-<!-- TODO integration tests fail when FieldCategories populated in DB -->
-<!--            <plugin>-->
-<!--                <groupId>dev.ikm.maven.tinkar</groupId>-->
-<!--                <artifactId>tinkar-maven-plugin</artifactId>-->
-<!--                <version>${maven-artifacts.version}</version>-->
-<!--                <configuration>-->
-<!--                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>-->
-<!--                    <fileset>-->
-<!--                        <directory>${starterSetLocation}</directory>-->
-<!--                        <includes>-->
-<!--                            <include>**/${starterSet}</include>-->
-<!--                        </includes>-->
-<!--                    </fileset>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>load-data</id>-->
-<!--                        <phase>install</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>load-data</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>dev.ikm.maven.tinkar</groupId>
+                <artifactId>tinkar-maven-plugin</artifactId>
+                <version>${maven-artifacts.version}</version>
+                <configuration>
+                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                    <fileset>
+                        <directory>${starterSetLocation}</directory>
+                        <includes>
+                            <include>**/${starterSet}</include>
+                        </includes>
+                    </fileset>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>load-data</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>dev.ikm.maven</groupId>
                 <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
