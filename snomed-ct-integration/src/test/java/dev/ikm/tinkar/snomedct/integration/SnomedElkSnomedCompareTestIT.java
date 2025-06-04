@@ -4,7 +4,7 @@ import dev.ikm.elk.snomed.test.SnomedVersion;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
-import dev.ikm.tinkar.reasoner.elksnomed.test.ElkSnomedClassifierTestBase;
+import dev.ikm.tinkar.reasoner.elksnomed.test.ElkSnomedCompareTestBase;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SnomedElkSnomedCompareTestIT extends ElkSnomedClassifierTestBase implements SnomedVersion {
+public class SnomedElkSnomedCompareTestIT extends ElkSnomedCompareTestBase implements SnomedVersion {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedElkSnomedCompareTestIT.class);
 
