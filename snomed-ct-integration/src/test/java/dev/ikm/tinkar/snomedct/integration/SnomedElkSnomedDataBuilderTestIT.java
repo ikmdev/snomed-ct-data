@@ -7,6 +7,7 @@ import dev.ikm.tinkar.common.service.ServiceProperties;
 import dev.ikm.tinkar.reasoner.elksnomed.test.ElkSnomedDataBuilderTestBase;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,11 @@ public class SnomedElkSnomedDataBuilderTestIT extends ElkSnomedDataBuilderTestBa
     private static final Logger LOG = LoggerFactory.getLogger(SnomedElkSnomedDataBuilderTestIT.class);
 
     private static Path origin;
+
+    @BeforeEach
+    public void setUp() {
+		inactive_count = 28314;
+    }
 
     @BeforeAll
     public static void startPrimitiveData() {
