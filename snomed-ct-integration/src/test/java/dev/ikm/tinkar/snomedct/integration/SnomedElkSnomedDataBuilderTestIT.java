@@ -24,7 +24,7 @@ public class SnomedElkSnomedDataBuilderTestIT extends ElkSnomedDataBuilderTestBa
 
     @BeforeEach
     public void setUp() {
-		inactive_count = 28314;
+        inactive_count = 28314;
     }
 
     @BeforeAll
