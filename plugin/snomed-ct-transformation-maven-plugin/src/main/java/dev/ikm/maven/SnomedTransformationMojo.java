@@ -4,8 +4,19 @@ import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
+import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
+import dev.ikm.tinkar.composer.Session;
+import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
+import dev.ikm.tinkar.composer.template.Definition;
+import dev.ikm.tinkar.composer.template.FullyQualifiedName;
+import dev.ikm.tinkar.composer.template.Identifier;
+import dev.ikm.tinkar.composer.template.StatedAxiom;
+import dev.ikm.tinkar.composer.template.Synonym;
 import dev.ikm.tinkar.entity.EntityService;
+import dev.ikm.tinkar.terms.EntityProxy;
+import dev.ikm.tinkar.terms.State;
+import dev.ikm.tinkar.terms.TinkarTerm;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -23,6 +34,9 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import static dev.ikm.tinkar.terms.TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE;
+import static dev.ikm.tinkar.terms.TinkarTerm.ENGLISH_LANGUAGE;
 
 @Mojo(name = "run-snomed-transformation", defaultPhase = LifecyclePhase.INSTALL)
 public class SnomedTransformationMojo extends AbstractMojo {
@@ -138,6 +152,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
         EntityService.get().beginLoadPhase();
         try {
             Composer composer = new Composer("Snomed Transformer Composer");
+            createAuthor(composer);
             processFilesFromInput(inputFileOrDirectory, composer);
             composer.commitAllSessions();
         } finally {
@@ -147,6 +162,41 @@ public class SnomedTransformationMojo extends AbstractMojo {
         }
     }
 
+    private void createAuthor(Composer composer) {
+        EntityProxy.Concept snomedAuthor = SnomedUtility.getUserConcept(namespace);
+        EntityProxy.Concept snomedCoreModule = EntityProxy.Concept.make("SNOMED CT Core Module", UuidT5Generator.get(namespace, "900000000000207008"));
+
+        Session session = composer.open(State.ACTIVE,
+                snomedAuthor,
+                snomedCoreModule,
+                TinkarTerm.DEVELOPMENT_PATH);
+
+        session.compose((ConceptAssembler concept) -> concept
+                .concept(snomedAuthor)
+                .attach((FullyQualifiedName fqn) -> fqn
+                        .language(ENGLISH_LANGUAGE)
+                        .text("IHTSDO SNOMED CT Author")
+                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                )
+                .attach((Synonym synonym)-> synonym
+                        .language(ENGLISH_LANGUAGE)
+                        .text("SNOMED CT Author")
+                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                )
+                .attach((Definition definition) -> definition
+                        .language(ENGLISH_LANGUAGE)
+                        .text("International Health Terminology Standards Development Organisation (IHTSDO) SNOMED CT Author")
+                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                )
+                .attach((Identifier identifier) -> identifier
+                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                        .identifier(snomedAuthor.asUuidArray()[0].toString())
+                )
+                .attach((StatedAxiom statedAxiom) -> statedAxiom
+                        .isA(TinkarTerm.USER)
+                )
+        );
+    }
     private void initializeDatastore(File datastore) {
         CachingService.clearAll();
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);

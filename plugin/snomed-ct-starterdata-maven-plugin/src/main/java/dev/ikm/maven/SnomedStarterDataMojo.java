@@ -53,27 +53,27 @@ public class SnomedStarterDataMojo extends AbstractMojo
 
             Composer composer = new Composer("Snomed Starter Data Composer");
 
+            EntityProxy.Concept snomedAuthor = EntityProxy.Concept.make("IHTSDO SNOMED CT Starter Data Author", UuidT5Generator.get(namespace, "IHTSDO SNOMED CT Starter Data Author"));
             Session session = composer.open(State.ACTIVE,
-                    TinkarTerm.USER,
+                    snomedAuthor,
                     TinkarTerm.PRIMORDIAL_MODULE,
                     TinkarTerm.PRIMORDIAL_PATH);
 
-            EntityProxy.Concept snomedAuthor = EntityProxy.Concept.make("IHTSDO SNOMED CT Author", UuidT5Generator.get(namespace, "IHTSDO SNOMED CT Author"));
             session.compose((ConceptAssembler concept) -> concept
                     .concept(snomedAuthor)
                     .attach((FullyQualifiedName fqn) -> fqn
                             .language(ENGLISH_LANGUAGE)
-                            .text("IHTSDO SNOMED CT Author")
+                            .text("IHTSDO SNOMED CT Starter Data Author")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Synonym synonym)-> synonym
                             .language(ENGLISH_LANGUAGE)
-                            .text("SNOMED CT Author")
+                            .text("SNOMED CT Starter Data Author")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Definition definition) -> definition
                             .language(ENGLISH_LANGUAGE)
-                            .text("International Health Terminology Standards Development Organisation (IHTSDO) SNOMED CT Author")
+                            .text("International Health Terminology Standards Development Organisation (IHTSDO) SNOMED CT Starter Data Author")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Identifier identifier) -> identifier
