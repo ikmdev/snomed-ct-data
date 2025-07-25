@@ -104,6 +104,7 @@
                             <include>**/${starterSet}</include>
                         </includes>
                     </fileset>
+                    <isolate>false</isolate>
                 </configuration>
                 <executions>
                     <execution>
