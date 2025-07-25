@@ -30,10 +30,10 @@
                         <goals>
                             <goal>run-owl-transformer</goal>
                         </goals>
-			            <configuration>
-			                <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <isolate>false</isolate>
-			            </configuration>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
