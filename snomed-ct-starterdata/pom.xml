@@ -4,7 +4,7 @@
     <parent>
         <groupId>dev.ikm.snomedct</groupId>
         <artifactId>snomed-ct-data</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-IKDT-949-Update-Tinkar-Starter-Data-SNAPSHOT</version>
     </parent>
 
     <groupId>dev.ikm.maven</groupId>
@@ -119,7 +119,7 @@
             <plugin>
                 <groupId>dev.ikm.maven</groupId>
                 <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0-IKDT-949-Update-Tinkar-Starter-Data-SNAPSHOT</version>
                 <configuration>
                     <namespaceString>${origin.namespace}</namespaceString>
                     <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
