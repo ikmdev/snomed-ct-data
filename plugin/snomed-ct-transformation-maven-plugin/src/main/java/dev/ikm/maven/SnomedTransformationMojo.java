@@ -67,7 +67,8 @@ public class SnomedTransformationMojo extends AbstractMojo {
             if (skipUnzip) {
                 // Let lucene shut down???
                 //Thread.sleep(10000);
-                inputFileOrDirectory = new File(inputDirectoryPath);
+                inputFileOrDirectory = searchTerminologyFolder( new File(inputDirectoryPath));
+//                inputFileOrDirectory = new File(inputDirectoryPath);
             } else {
                 String unzippedData = unzipRawData(inputDirectoryPath);
                 LOG.info("unzippedData: " + unzippedData);
@@ -216,6 +217,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
 
     private void processIndividualFile(File file, Composer composer) {
         String fileName = file.getName();
+        LOG.info("### FILENAME: {}", fileName);
         Transformer transformer = getTransformer(fileName);
 
         if (transformer != null) {

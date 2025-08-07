@@ -17,19 +17,101 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-origin-data-dependency</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>dev.ikm.data.snomedct</groupId>
+                                    <artifactId>snomedct-origin</artifactId>
+                                    <version>${snomedct-origin-data.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-tinkar-starter-data-dependency</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>snomed-ct-starterdata</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>unreasoned-pb</classifier>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/input-data</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>dev.ikm.maven.tinkar</groupId>
+                <artifactId>tinkar-maven-plugin</artifactId>
+                <executions>
+                    <!-- Load Input Data (generate-resources) -->
+                    <execution>
+                        <configuration>
+                            <fileset>
+                                <directory>${project.build.directory}/input-data</directory>
+                                <includes>
+                                    <include>**/*.zip</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                        <id>load-data</id>
+                        <goals>
+                            <goal>load-data-isolated</goal>
+                        </goals>
+                    </execution>
+                    <!-- Run owl transformer (process-classes) -->
+                    <execution>
+                        <id>owl-transform</id>
+                        <goals>
+                            <goal>run-owl-transformer-isolated</goal>
+                        </goals>
+                    </execution>
+                    <!-- Run full reasoner (process-classes) -->
+                    <execution>
+                        <id>${project.artifactId}-full-reasoner</id>
+                        <goals>
+                            <goal>run-full-reasoner-isolated</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>dev.ikm.maven</groupId>
                 <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
                 <configuration>
                     <namespaceString>${origin.namespace}</namespaceString>
-                    <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
-                    <inputDirectoryPath>${user.home}/.m2/repository/dev/ikm/snomedct/snomed-ct-origin/${project.version}/snomed-ct-origin-${project.version}-data.zip</inputDirectoryPath>
+                    <datastorePath>${project.build.directory}/datastore</datastorePath>
+<!--                    <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>-->
+                    <inputDirectoryPath>${project.build.directory}/origin-data</inputDirectoryPath>
                     <dataOutputPath>${project.build.directory}</dataOutputPath>
+                    <skipUnzip>true</skipUnzip>
                 </configuration>
                 <executions>
                     <execution>
                         <id>run-snomed-transformation</id>
-                        <phase>install</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>run-snomed-transformation</goal>
                         </goals>

@@ -17,36 +17,121 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
+                <groupId>dev.ikm.maven.tinkar</groupId>
+                <artifactId>tinkar-maven-plugin</artifactId>
                 <executions>
+                    <!-- Import Provided Data Resources (generate-resources) -->
                     <execution>
-                        <id>clean</id>
-                        <phase>clean</phase>
+                        <id>${project.artifactId}-import-data-resources</id>
                         <goals>
-                            <goal>clean</goal>
+                            <!--goal>load-data-isolated</goal-->
+                            <goal>load-data</goal>
                         </goals>
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${dataStoreLocation}/${tinkar-starter-data.artifactId}-${tinkar-starter-data.version}-${tinkar-starter-data.classifier}</directory>
+                                    <directory>${project.build.directory}/input-data</directory>
                                     <includes>
-                                        <include>**</include>
+                                        <include>**pb.zip</include>
+                                        <include>**ike-cs.zip</include>
                                     </includes>
-                                    <followSymlinks>false</followSymlinks>
-                                </fileset>
-                                <fileset>
-                                    <directory>${dataStoreLocation}/${dataStore}</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                    <followSymlinks>false</followSymlinks>
                                 </fileset>
                             </filesets>
                         </configuration>
                     </execution>
+                    <!-- Export unreasoned data as a protocol buffers zip file (package) -->
+                    <!--execution>
+                        <id>${project.artifactId}-unreasoned-export</id>
+                        <goals>
+                            <goal>export-tinkar-data</goal>
+                        </goals>
+                        <configuration>
+                            <fileName>${data-artifact.prefix}-unreasoned-pb.zip</fileName>
+                        </configuration>
+                    </execution-->
+                    <!-- Run full reasoner (process-classes) -->
+                    <execution>
+                        <id>${project.artifactId}-full-reasoner</id>
+                        <goals>
+                            <!--goal>run-full-reasoner-isolated</goal-->
+                            <goal>run-full-reasoner</goal>
+                        </goals>
+                    </execution>
+                    <!-- Export reasoned data as a protocol buffers zip file (package) -->
+                    <!--execution>
+                        <id>${project.artifactId}-reasoned-export</id>
+                        <goals>
+
+                            <goal>export-tinkar-data</goal>
+                        </goals>
+                        <configuration>
+                            <exportDirectory>${project.build.directory}</exportDirectory>
+                            <fileName>${data-artifact.prefix}-reasoned-pb.zip</fileName>
+                        </configuration>
+                    </execution-->
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <!-- Attach reasoned and unreasoned exports to the artifact -->
+                <executions>
+                    <!--execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${data-artifact.prefix}-reasoned-pb.zip</file>
+                                    <type>zip</type>
+                                    <classifier>reasoned-pb</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/${data-artifact.prefix}-unreasoned-pb.zip</file>
+                                    <type>zip</type>
+                                    <classifier>unreasoned-pb</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution-->
+                </executions>
+            </plugin>
+
+
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-clean-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>clean</id>-->
+<!--                        <phase>clean</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>clean</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <filesets>-->
+<!--                                <fileset>-->
+<!--                                    <directory>${dataStoreLocation}/${tinkar-starter-data.artifactId}-${tinkar-starter-data.version}-${tinkar-starter-data.classifier}</directory>-->
+<!--                                    <includes>-->
+<!--                                        <include>**</include>-->
+<!--                                    </includes>-->
+<!--                                    <followSymlinks>false</followSymlinks>-->
+<!--                                </fileset>-->
+<!--                                <fileset>-->
+<!--                                    <directory>${dataStoreLocation}/${dataStore}</directory>-->
+<!--                                    <includes>-->
+<!--                                        <include>**</include>-->
+<!--                                    </includes>-->
+<!--                                    <followSymlinks>false</followSymlinks>-->
+<!--                                </fileset>-->
+<!--                            </filesets>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -55,25 +140,34 @@
                         <id>copy-tinkar-starter-data-dependency</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>copy</goal>
                         </goals>
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>${tinkar-starter-data.groupId}</groupId>
-                                    <artifactId>${tinkar-starter-data.artifactId}</artifactId>
+                                    <groupId>dev.ikm.data.tinkar</groupId>
+                                    <artifactId>tinkar-starter-data</artifactId>
                                     <version>${tinkar-starter-data.version}</version>
-                                    <classifier>${tinkar-starter-data.classifier}</classifier>
+                                    <classifier>unreasoned-pb</classifier>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>${dataStoreLocation}</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/input-data</outputDirectory>
                                 </artifactItem>
+<!--                                <artifactItem>-->
+<!--                                    <groupId>${tinkar-starter-data.groupId}</groupId>-->
+<!--                                    <artifactId>${tinkar-starter-data.artifactId}</artifactId>-->
+<!--                                    <version>${tinkar-starter-data.version}</version>-->
+<!--                                    <classifier>${tinkar-starter-data.classifier}</classifier>-->
+<!--                                    <type>zip</type>-->
+<!--                                    <overWrite>true</overWrite>-->
+<!--                                    <outputDirectory>${dataStoreLocation}</outputDirectory>-->
+<!--                                </artifactItem>-->
                             </artifactItems>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -91,43 +185,58 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>dev.ikm.maven.tinkar</groupId>
-                <artifactId>tinkar-maven-plugin</artifactId>
-                <version>${maven-artifacts.version}</version>
-                <configuration>
-                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                    <fileset>
-                        <directory>${starterSetLocation}</directory>
-                        <includes>
-                            <include>**/${starterSet}</include>
-                        </includes>
-                    </fileset>
-                    <isolate>false</isolate>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>load-data</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>load-data</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            </plugin-->
+<!--            <plugin>-->
+<!--                <groupId>dev.ikm.maven.tinkar</groupId>-->
+<!--                <artifactId>tinkar-maven-plugin</artifactId>-->
+<!--                <version>${tinkar-maven-artifacts.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <configuration>-->
+<!--                            <fileset>-->
+<!--                                <directory>${project.build.directory}/input-data</directory>-->
+<!--                                <includes>-->
+<!--                                    <include>**pb.zip</include>-->
+<!--                                </includes>-->
+<!--                            </fileset>-->
+<!--                        </configuration>-->
+<!--                        <id>load-data</id>-->
+<!--                        <phase>install</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>load-data-isolated</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    &lt;!&ndash;execution>-->
+<!--                        <configuration>-->
+<!--                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>-->
+<!--                            <fileset>-->
+<!--                                <directory>${starterSetLocation}</directory>-->
+<!--                                <includes>-->
+<!--                                    <include>**/ESH-export-20250725-pb.zip</include>-->
+<!--                                </includes>-->
+<!--                            </fileset>-->
+<!--                        </configuration>-->
+<!--                        <id>load-data2</id>-->
+<!--                        <phase>install</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>load-data</goal>-->
+<!--                        </goals>-->
+<!--                    </execution&ndash;&gt;-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>dev.ikm.maven</groupId>
                 <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
                 <configuration>
                     <namespaceString>${origin.namespace}</namespaceString>
-                    <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
+<!--                    <datastorePath>${project.build.directory}/datastore</datastorePath>-->
+<!--                    <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>-->
                 </configuration>
                 <executions>
                     <execution>
                         <id>run-snomed-starterdata</id>
-                        <phase>install</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>run-snomed-starterdata</goal>
                         </goals>
