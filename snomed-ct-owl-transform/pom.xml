@@ -32,7 +32,6 @@
                         </goals>
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                            <isolate>false</isolate>
                         </configuration>
                     </execution>
                 </executions>
