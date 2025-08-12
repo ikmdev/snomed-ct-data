@@ -112,22 +112,22 @@ public class SnomedStarterDataMojo extends AbstractMojo
                     )
             );
 
-            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Terms", UuidT5Generator.get(namespace, "12345678999"));
+            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Term Code", UuidT5Generator.get(namespace, "12345678999"));
             session.compose((ConceptAssembler concept) -> concept
                     .concept(gmdnIdentifier)
                     .attach((FullyQualifiedName fqn) -> fqn
                             .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
+                            .text("GMDN Term Code")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Synonym synonym) -> synonym
                             .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
+                            .text("GMDN Term Code")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Definition definition) -> definition
                             .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
+                            .text("GMDN Term Code")
                             .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                     )
                     .attach((Identifier identifier) -> identifier

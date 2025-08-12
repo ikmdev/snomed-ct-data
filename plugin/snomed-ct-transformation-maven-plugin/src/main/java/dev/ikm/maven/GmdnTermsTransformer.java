@@ -48,7 +48,7 @@ public class GmdnTermsTransformer extends AbstractTransformer {
         EntityProxy.Concept author = SnomedUtility.getUserConcept(namespace);
         EntityProxy.Concept module = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
         EntityProxy.Concept path = SnomedUtility.getPathConcept();
-        EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Terms", UuidT5Generator.get(namespace, "12345678999"));
+        EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Term Code", UuidT5Generator.get(namespace, "12345678999"));
         
         try {
             List<GmdnTerm> terms = parseGmdnXml(inputFile);
