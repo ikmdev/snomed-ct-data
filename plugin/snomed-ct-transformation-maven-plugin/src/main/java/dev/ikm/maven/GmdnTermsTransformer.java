@@ -1,14 +1,12 @@
 package dev.ikm.maven;
 
 import dev.ikm.tinkar.common.id.PublicIds;
-import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
 import dev.ikm.tinkar.composer.template.DefinitionConsumer;
 import dev.ikm.tinkar.composer.template.FullyQualifiedName;
 import dev.ikm.tinkar.composer.template.Identifier;
-import dev.ikm.tinkar.composer.template.StatedAxiom;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import dev.ikm.tinkar.terms.TinkarTerm;
@@ -46,10 +44,9 @@ public class GmdnTermsTransformer extends AbstractTransformer {
     public void transform(File inputFile, Composer composer) {
         // TODO GMDN Agency starter concepts
         EntityProxy.Concept author = SnomedUtility.getUserConcept(namespace);
-        EntityProxy.Concept module = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
         EntityProxy.Concept path = SnomedUtility.getPathConcept();
-        EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Term Code", UuidT5Generator.get(namespace, "12345678999"));
-        
+        EntityProxy.Concept module = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
+
         try {
             List<GmdnTerm> terms = parseGmdnXml(inputFile);
             terms.forEach(gmdnTerm -> {
@@ -59,27 +56,27 @@ public class GmdnTermsTransformer extends AbstractTransformer {
 
                 EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, "GMDN_" + gmdnTerm.termCode())));
                 session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                        .concept(concept)
-                        .attach((Identifier identifier) -> identifier
-                                .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                                .identifier(concept.asUuidArray()[0].toString())
-                        )
-                        .attach((FullyQualifiedName fqn) -> fqn
-                                .language(TinkarTerm.ENGLISH_LANGUAGE)
-                                .text(gmdnTerm.termName())
-                                .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                        )
-                        .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
-                                .text(gmdnTerm.termDefinition())
-                                .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                        )
-                        .attach((Identifier identifier) -> identifier
-                                .source(gmdnIdentifier)
-                                .identifier(gmdnTerm.termCode())
-                        )
-                        .attach((StatedAxiom statedAxiom) -> statedAxiom
-                                .isA(gmdnIdentifier)
-                        )
+                                .concept(concept)
+                                .attach((Identifier identifier) -> identifier
+                                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                                        .identifier(concept.asUuidArray()[0].toString())
+                                )
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(TinkarTerm.ENGLISH_LANGUAGE)
+                                        .text(gmdnTerm.termName())
+                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                                )
+                                .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
+                                        .text(gmdnTerm.termDefinition())
+                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                                )
+//                .attach((Identifier identifier) -> identifier
+//                        .source(GudidTerm.GUDID_GMDN_TERMS)
+//                        .identifier(gmdnTerm.termCode())
+//                )
+//                .attach((StatedAxiom statedAxiom) -> statedAxiom
+//                        .isA(GudidTerm.GUDID_GMDN_TERMS)
+//                )
                 );
             });
             LOG.info("conceptCount: {}", terms.size());
