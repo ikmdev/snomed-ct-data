@@ -112,6 +112,33 @@ public class SnomedStarterDataMojo extends AbstractMojo
                     )
             );
 
+            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Term Code", UuidT5Generator.get(namespace, "12345678999"));
+            session.compose((ConceptAssembler concept) -> concept
+                    .concept(gmdnIdentifier)
+                    .attach((FullyQualifiedName fqn) -> fqn
+                            .language(ENGLISH_LANGUAGE)
+                            .text("GMDN Term Code")
+                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                    )
+                    .attach((Synonym synonym) -> synonym
+                            .language(ENGLISH_LANGUAGE)
+                            .text("GMDN Term Code")
+                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                    )
+                    .attach((Definition definition) -> definition
+                            .language(ENGLISH_LANGUAGE)
+                            .text("GMDN Term Code")
+                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
+                    )
+                    .attach((Identifier identifier) -> identifier
+                            .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                            .identifier(gmdnIdentifier.asUuidArray()[0].toString())
+                    )
+                    .attach((StatedAxiom statedAxiom) -> statedAxiom
+                            .isA(TinkarTerm.IDENTIFIER_SOURCE)
+                    )
+            );
+            
             EntityProxy.Concept descriptionType = EntityProxy.Concept.make("Description Type", TinkarTerm.DESCRIPTION_TYPE.uuids()[0], UuidT5Generator.get(namespace,"900000000000446008"));
             session.compose((ConceptAssembler concept) -> concept
                     .concept(descriptionType));
