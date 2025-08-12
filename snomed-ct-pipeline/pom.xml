@@ -77,22 +77,44 @@
                         </configuration>
                         <id>load-data</id>
                         <goals>
-                            <goal>load-data-isolated</goal>
+                            <goal>load-data</goal>
                         </goals>
                     </execution>
                     <!-- Run owl transformer (process-classes) -->
                     <execution>
                         <id>owl-transform</id>
                         <goals>
-                            <goal>run-owl-transformer-isolated</goal>
+                            <goal>run-owl-transformer</goal>
                         </goals>
+                    </execution>
+                    <!-- Export unreasoned data as a protocol buffers zip file (package) -->
+                    <execution>
+                        <id>${project.artifactId}-unreasoned-export</id>
+                        <goals>
+                            <goal>export-tinkar-data</goal>
+                        </goals>
+                        <configuration>
+                            <fileName>${data-artifact.prefix}-unreasoned-pb.zip</fileName>
+                        </configuration>
                     </execution>
                     <!-- Run full reasoner (process-classes) -->
                     <execution>
                         <id>${project.artifactId}-full-reasoner</id>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>run-full-reasoner-isolated</goal>
+                            <goal>run-full-reasoner</goal>
                         </goals>
+                    </execution>
+                    <!-- Export reasoned data as a protocol buffers zip file (package) -->
+                    <execution>
+                        <id>${project.artifactId}-reasoned-export</id>
+                        <goals>
+                            <goal>export-tinkar-data</goal>
+                        </goals>
+                        <configuration>
+                            <exportDirectory>${project.build.directory}</exportDirectory>
+                            <fileName>${data-artifact.prefix}-reasoned-pb.zip</fileName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -115,6 +137,103 @@
                         <goals>
                             <goal>run-snomed-transformation</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <finalName>${data-artifact.prefix}</finalName>
+                    <attach>false</attach>
+                    <inlineDescriptors>
+                        <inlineDescriptor>
+                            <formats>
+                                <format>zip</format>
+                            </formats>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}/datastore</directory>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>lucene/**</exclude>
+                                    </excludes>
+                                </fileSet>
+                            </fileSets>
+                            <includeBaseDirectory>false</includeBaseDirectory>
+                        </inlineDescriptor>
+                    </inlineDescriptors>
+                </configuration>
+                <executions>
+                    <!-- Zip up unreasoned spinedarray database -->
+                    <execution>
+                        <id>unreasoned-sa-zip</id>
+                        <phase>process-classes</phase> <!-- Overriding default phase: force this execution before reasoning -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <inlineDescriptors>
+                                <inlineDescriptor>
+                                    <id>unreasoned-sa</id>
+                                    <fileSets>
+                                        <fileSet>
+                                            <outputDirectory>${data-artifact.prefix}-unreasoned-sa</outputDirectory>
+                                        </fileSet>
+                                    </fileSets>
+                                </inlineDescriptor>
+                            </inlineDescriptors>
+                        </configuration>
+                    </execution>
+                    <!-- Zip up reasoned spinedarray database -->
+                    <execution>
+                        <phase>package</phase>
+                        <id>reasoned-sa-zip</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <inlineDescriptors>
+                                <inlineDescriptor>
+                                    <id>reasoned-sa</id>
+                                    <fileSets>
+                                        <fileSet>
+                                            <outputDirectory>${data-artifact.prefix}-reasoned-sa</outputDirectory>
+                                        </fileSet>
+                                    </fileSets>
+                                </inlineDescriptor>
+                            </inlineDescriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <!-- Attach reasoned and unreasoned exports to the artifact -->
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${data-artifact.prefix}-reasoned-pb.zip</file>
+                                    <type>zip</type>
+                                    <classifier>reasoned-pb</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/${data-artifact.prefix}-unreasoned-pb.zip</file>
+                                    <type>zip</type>
+                                    <classifier>unreasoned-pb</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

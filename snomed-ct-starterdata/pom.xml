@@ -40,7 +40,7 @@
                         </configuration>
                     </execution>
                     <!-- Export unreasoned data as a protocol buffers zip file (package) -->
-                    <!--execution>
+                    <execution>
                         <id>${project.artifactId}-unreasoned-export</id>
                         <goals>
                             <goal>export-tinkar-data</goal>
@@ -48,27 +48,26 @@
                         <configuration>
                             <fileName>${data-artifact.prefix}-unreasoned-pb.zip</fileName>
                         </configuration>
-                    </execution-->
+                    </execution>
                     <!-- Run full reasoner (process-classes) -->
                     <execution>
                         <id>${project.artifactId}-full-reasoner</id>
                         <goals>
-                            <!--goal>run-full-reasoner-isolated</goal-->
+                            <!--goal>run-full-reasoner</goal-->
                             <goal>run-full-reasoner</goal>
                         </goals>
                     </execution>
                     <!-- Export reasoned data as a protocol buffers zip file (package) -->
-                    <!--execution>
+                    <execution>
                         <id>${project.artifactId}-reasoned-export</id>
                         <goals>
-
                             <goal>export-tinkar-data</goal>
                         </goals>
                         <configuration>
                             <exportDirectory>${project.build.directory}</exportDirectory>
                             <fileName>${data-artifact.prefix}-reasoned-pb.zip</fileName>
                         </configuration>
-                    </execution-->
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -76,7 +75,7 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <!-- Attach reasoned and unreasoned exports to the artifact -->
                 <executions>
-                    <!--execution>
+                    <execution>
                         <id>attach-artifacts</id>
                         <phase>package</phase>
                         <goals>
@@ -96,7 +95,7 @@
                                 </artifact>
                             </artifacts>
                         </configuration>
-                    </execution-->
+                    </execution>
                 </executions>
             </plugin>
 
@@ -189,7 +188,7 @@
 <!--            <plugin>-->
 <!--                <groupId>dev.ikm.maven.tinkar</groupId>-->
 <!--                <artifactId>tinkar-maven-plugin</artifactId>-->
-<!--                <version>${tinkar-maven-artifacts.version}</version>-->
+<!--                <version>${maven-artifacts.version}</version>-->
 <!--                <executions>-->
 <!--                    <execution>-->
 <!--                        <configuration>-->
@@ -203,7 +202,7 @@
 <!--                        <id>load-data</id>-->
 <!--                        <phase>install</phase>-->
 <!--                        <goals>-->
-<!--                            <goal>load-data-isolated</goal>-->
+<!--                            <goal>load-data</goal>-->
 <!--                        </goals>-->
 <!--                    </execution>-->
 <!--                    &lt;!&ndash;execution>-->
