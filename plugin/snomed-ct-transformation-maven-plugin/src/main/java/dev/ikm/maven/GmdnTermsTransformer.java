@@ -18,11 +18,15 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class GmdnTermsTransformer extends AbstractTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(GmdnTermsTransformer.class);
@@ -47,8 +51,33 @@ public class GmdnTermsTransformer extends AbstractTransformer {
             List<GmdnTerm> terms = parseGmdnXml(inputFile);
             terms.forEach(gmdnTerm -> {
                 State status = "Active".equals(gmdnTerm.termStatus()) ? State.ACTIVE : State.INACTIVE;
-                Session session = composer.open(status, author, module, path);
-                createGmdnConcept(session, gmdnTerm);
+                long time = gmdnTerm.latestDate().atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+                Session session = composer.open(status, time, author, module, path);
+
+                EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, "GMDN_" + gmdnTerm.termCode())));
+                session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                .concept(concept)
+                                .attach((Identifier identifier) -> identifier
+                                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                                        .identifier(concept.asUuidArray()[0].toString())
+                                )
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(TinkarTerm.ENGLISH_LANGUAGE)
+                                        .text(gmdnTerm.termName())
+                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                                )
+                                .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
+                                        .text(gmdnTerm.termDefinition())
+                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                                )
+//                .attach((Identifier identifier) -> identifier
+//                        .source(GudidTerm.GUDID_GMDN_TERMS)
+//                        .identifier(gmdnTerm.termCode())
+//                )
+//                .attach((StatedAxiom statedAxiom) -> statedAxiom
+//                        .isA(GudidTerm.GUDID_GMDN_TERMS)
+//                )
+                );
             });
             LOG.info("conceptCount: {}", terms.size());
         } catch (Exception e) {
@@ -79,39 +108,17 @@ public class GmdnTermsTransformer extends AbstractTransformer {
         return terms;
     }
 
-    private EntityProxy.Concept createGmdnConcept(Session session, GmdnTerm gmdnTerm) {
-        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, "GMDN_" + gmdnTerm.termCode())));
-        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                .concept(concept)
-                .attach((Identifier identifier) -> identifier
-                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                        .identifier(concept.asUuidArray()[0].toString())
-                )
-                .attach((FullyQualifiedName fqn) -> fqn
-                        .language(TinkarTerm.ENGLISH_LANGUAGE)
-                        .text(gmdnTerm.termName())
-                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                )
-                .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
-                        .text(gmdnTerm.termDefinition())
-                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                )
-//                .attach((Identifier identifier) -> identifier
-//                        .source(GudidTerm.GUDID_GMDN_TERMS)
-//                        .identifier(gmdnTerm.termCode())
-//                )
-//                .attach((StatedAxiom statedAxiom) -> statedAxiom
-//                        .isA(GudidTerm.GUDID_GMDN_TERMS)
-//                )
-        );
-        return concept;
-    }
-
     record GmdnTerm(String termCode, String termName, String termDefinition, String termStatus,
-                    String termIsIVD, String createdDate, String modifiedDate) {
-        public static GmdnTerm fromMap(Map<String, String> row) {
+                    String termIsIVD, String createdDate, String modifiedDate, String obsoletedDate) {
+        static GmdnTerm fromMap(Map<String, String> row) {
             return new GmdnTerm(row.get("termCode"), row.get("termName"), row.get("termDefinition"), row.get("termStatus"),
-                    row.get("termIsIVD"), row.get("createdDate"), row.get("modifiedDate"));
+                    row.get("termIsIVD"), row.get("createdDate"), row.get("modifiedDate"), row.get("obsoletedDate"));
+        }
+
+        LocalDate latestDate() {
+            return Stream.of(createdDate, modifiedDate, obsoletedDate)
+                    .filter(Objects::nonNull).map(LocalDate::parse)
+                    .sorted().toList().getLast();
         }
     }
 
