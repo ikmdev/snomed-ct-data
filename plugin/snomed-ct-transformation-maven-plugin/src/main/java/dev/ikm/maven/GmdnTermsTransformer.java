@@ -7,6 +7,7 @@ import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
 import dev.ikm.tinkar.composer.template.DefinitionConsumer;
 import dev.ikm.tinkar.composer.template.FullyQualifiedName;
 import dev.ikm.tinkar.composer.template.Identifier;
+import dev.ikm.tinkar.composer.template.StatedAxiom;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import dev.ikm.tinkar.terms.TinkarTerm;
@@ -56,27 +57,27 @@ public class GmdnTermsTransformer extends AbstractTransformer {
 
                 EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, "GMDN_" + gmdnTerm.termCode())));
                 session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                                .concept(concept)
-                                .attach((Identifier identifier) -> identifier
-                                        .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                                        .identifier(concept.asUuidArray()[0].toString())
-                                )
-                                .attach((FullyQualifiedName fqn) -> fqn
-                                        .language(TinkarTerm.ENGLISH_LANGUAGE)
-                                        .text(gmdnTerm.termName())
-                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                )
-                                .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
-                                        .text(gmdnTerm.termDefinition())
-                                        .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                )
-//                .attach((Identifier identifier) -> identifier
-//                        .source(GudidTerm.GUDID_GMDN_TERMS)
-//                        .identifier(gmdnTerm.termCode())
-//                )
-//                .attach((StatedAxiom statedAxiom) -> statedAxiom
-//                        .isA(GudidTerm.GUDID_GMDN_TERMS)
-//                )
+                        .concept(concept)
+                        .attach((Identifier identifier) -> identifier
+                                .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
+                                .identifier(concept.asUuidArray()[0].toString())
+                        )
+                        .attach((FullyQualifiedName fqn) -> fqn
+                                .language(TinkarTerm.ENGLISH_LANGUAGE)
+                                .text(gmdnTerm.termName())
+                                .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                        )
+                        .attach((DefinitionConsumer) definition -> definition.language(TinkarTerm.ENGLISH_LANGUAGE)
+                                .text(gmdnTerm.termDefinition())
+                                .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
+                        )
+                        .attach((Identifier identifier) -> identifier
+                                .source(GudidTerm.GUDID_GMDN_TERMS)
+                                .identifier(gmdnTerm.termCode())
+                        )
+                        .attach((StatedAxiom statedAxiom) -> statedAxiom
+                                .isA(GudidTerm.GUDID_GMDN_TERMS)
+                        )
                 );
             });
             LOG.info("conceptCount: {}", terms.size());
