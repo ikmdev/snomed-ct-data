@@ -4,7 +4,6 @@ import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
-import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
@@ -148,8 +147,8 @@ public class SnomedTransformationMojo extends AbstractMojo {
 
             if (snomedDirectory.getAbsolutePath().contains("International")) {
                 LOG.info("Processing GMDN Datasets...");
+                processFilesFromInput(baseDirectory.toPath().resolve("src", "gmdnDevice").toFile(), composer);
                 processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping"), composer);
-                processFilesFromInput(new File(baseDirectory, "gmdnDevice"), composer);
             }
 
             composer.commitAllSessions();
@@ -204,6 +203,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
     }
 
     private void processFilesFromInput(File inputFileOrDirectory, Composer composer) {
+        LOG.info("processFilesFromInput: {}", inputFileOrDirectory);
         if (inputFileOrDirectory.isDirectory()) {
             Arrays.stream(inputFileOrDirectory.listFiles())
                     .filter(file -> file.getName().endsWith(".txt") || file.getName().endsWith(".xml"))
