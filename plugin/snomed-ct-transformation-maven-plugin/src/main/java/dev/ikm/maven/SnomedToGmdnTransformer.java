@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -28,6 +29,8 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
     private static final int REFSET_ID = 4;
     private static final int REFERENCED_COMPONENT_ID = 5;
     private static final int MAP_TARGET = 6;
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     SnomedToGmdnTransformer(UUID namespace) {
         super(namespace);
@@ -44,7 +47,7 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
                     .map(row -> row.split("\t"))
                     .filter(data -> "1".equals(data[ACTIVE]))
                     .forEach(data -> {
-                        long time = LocalDate.parse(data[EFFECTIVE_TIME]).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+                        long time = LocalDate.parse(data[EFFECTIVE_TIME], DATE_FORMAT).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                         EntityProxy.Concept module = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[MODULE_ID])));
 
                         Session session = composer.open(State.ACTIVE, time, author, module, path);
