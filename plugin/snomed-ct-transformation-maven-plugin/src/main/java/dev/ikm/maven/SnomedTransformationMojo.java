@@ -107,13 +107,11 @@ public class SnomedTransformationMojo extends AbstractMojo {
         return outputDirectory.getAbsolutePath();
     }
 
-    private File searchTerminologyFolder(File baseDirectory, String parentDir) {
+    private Path searchTerminologyFolder(File baseDirectory, String parentDir) {
         Path dataDirectory = baseDirectory.toPath().resolve("src", parentDir);
         try (Stream<Path> stream = Files.walk(dataDirectory)) {
-            return stream.map(Path::toFile).filter(file -> {
-                        return file.isDirectory() && file.getName().equals("Terminology")
-                                && file.getParentFile().getName().equals("Full");
-                    })
+            return stream
+                    .filter(file -> file.toFile().isDirectory() && "Full".equals(file.toFile().getName()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("'Terminology' folder could not be found in: " + dataDirectory));
         } catch (IOException ex) {
@@ -142,13 +140,13 @@ public class SnomedTransformationMojo extends AbstractMojo {
             Composer composer = new Composer("Snomed Transformer Composer");
             createAuthor(composer);
 
-            File snomedDirectory = searchTerminologyFolder(baseDirectory, "snomedFull");
+            File snomedDirectory = searchTerminologyFolder(baseDirectory, "snomedFull").resolve("Terminology").toFile();
             processFilesFromInput(snomedDirectory, composer);
 
             if (snomedDirectory.getAbsolutePath().contains("International")) {
                 LOG.info("Processing GMDN Datasets...");
                 processFilesFromInput(baseDirectory.toPath().resolve("src", "gmdnDevice").toFile(), composer);
-                processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping"), composer);
+                processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping").resolve("Refset", "Map").toFile(), composer);
             }
 
             composer.commitAllSessions();
