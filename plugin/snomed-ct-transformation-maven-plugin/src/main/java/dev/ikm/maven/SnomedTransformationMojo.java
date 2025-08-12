@@ -142,9 +142,16 @@ public class SnomedTransformationMojo extends AbstractMojo {
         try {
             Composer composer = new Composer("Snomed Transformer Composer");
             createAuthor(composer);
-            processFilesFromInput(searchTerminologyFolder(baseDirectory, "snomedFull"), composer);
-            processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping"), composer);
-            processFilesFromInput(new File(baseDirectory, "gmdnDevice"), composer);
+
+            File snomedDirectory = searchTerminologyFolder(baseDirectory, "snomedFull");
+            processFilesFromInput(snomedDirectory, composer);
+
+            if (snomedDirectory.getAbsolutePath().contains("International")) {
+                LOG.info("Processing GMDN Datasets...");
+                processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping"), composer);
+                processFilesFromInput(new File(baseDirectory, "gmdnDevice"), composer);
+            }
+
             composer.commitAllSessions();
         } finally {
             EntityService.get().endLoadPhase();
@@ -155,7 +162,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
 
     private void createAuthor(Composer composer) {
         EntityProxy.Concept snomedAuthor = SnomedUtility.getUserConcept(namespace);
-        EntityProxy.Concept snomedCoreModule = EntityProxy.Concept.make("SNOMED CT Core Module", UuidT5Generator.get(namespace, "900000000000207008"));
+        EntityProxy.Concept snomedCoreModule = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
 
         Session session = composer.open(State.ACTIVE,
                 snomedAuthor,
@@ -241,9 +248,13 @@ public class SnomedTransformationMojo extends AbstractMojo {
                 return new AxiomSyntaxTransformer(namespace);
             }
         } else if (absolutePath.contains("gmdnMapping")) {
-            // TODO
+            if (absolutePath.contains("GMDNMapSimpleMapFull")) {
+                return new SnomedToGmdnTransformer(namespace);
+            }
         } else if (absolutePath.contains("gmdnDevice")) {
-            // TODO
+            if (absolutePath.contains("gmdnData")) {
+                return new GmdnTermsTransformer(namespace);
+            }
         }
         return null;
     }
