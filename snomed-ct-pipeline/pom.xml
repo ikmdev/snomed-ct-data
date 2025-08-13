@@ -14,12 +14,48 @@
     <name>snomed-ct-pipeline</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <data-properties.groupId>dev.ikm.maven.snomedct</data-properties.groupId>
+        <data-properties.artifactId>snomedct-data-properties</data-properties.artifactId>
+        <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
+        <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
+
+        <!-- Properties for Ease of Use -->
+        <data-properties.path>${project.build.directory}/${data-properties.artifactId}-${data-properties.version}.properties</data-properties.path>
+        <data-artifact.version>${snomedct-origin-data.version}+${maven.build.timestamp}</data-artifact.version>
+        <data-artifact.prefix>${data-artifact.artifactId}-${data-artifact.version}</data-artifact.prefix>
+
+        <data-artifact.path-prefix>${project.build.directory}/${data-artifact.prefix}</data-artifact.path-prefix>
+        <deploymentFiles>${project.basedir}/pom.xml,${data-artifact.path-prefix}-unreasoned-sa.zip,${data-artifact.path-prefix}-reasoned-sa.zip,${data-artifact.path-prefix}-unreasoned-pb.zip,${data-artifact.path-prefix}-reasoned-pb.zip</deploymentFiles>
+        <deploymentClassifiers>pipeline,unreasoned-sa,reasoned-sa,unreasoned-pb,reasoned-pb</deploymentClassifiers>
+        <deploymentTypes>xml,zip,zip,zip,zip</deploymentTypes>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>copy-properties-dependency</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${data-properties.groupId}</groupId>
+                                    <artifactId>${data-properties.artifactId}</artifactId>
+                                    <version>${data-properties.version}</version>
+                                    <type>properties</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>copy-origin-data-dependency</id>
                         <phase>generate-sources</phase>
@@ -28,10 +64,18 @@
                         </goals>
                         <configuration>
                             <artifactItems>
+<!--                                <artifactItem>-->
+<!--                                    <groupId>dev.ikm.data.snomedct</groupId>-->
+<!--                                    <artifactId>snomedct-origin</artifactId>-->
+<!--                                    <version>${snomedct-origin-data.version}</version>-->
+<!--                                    <type>zip</type>-->
+<!--                                    <overWrite>true</overWrite>-->
+<!--                                    <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>-->
+<!--                                </artifactItem>-->
                                 <artifactItem>
                                     <groupId>dev.ikm.data.snomedct</groupId>
                                     <artifactId>snomedct-origin</artifactId>
-                                    <version>${snomedct-origin-data.version}</version>
+                                    <version>international-20250101T120000Z+1.0.0-SNAPSHOT</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>
@@ -40,7 +84,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-tinkar-starter-data-dependency</id>
+                        <id>copy-starter-data-dependencies</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy</goal>
@@ -62,181 +106,378 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>dev.ikm.maven.tinkar</groupId>
-                <artifactId>tinkar-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
                 <executions>
-                    <!-- Load Input Data (generate-resources) -->
                     <execution>
-                        <configuration>
-                            <fileset>
-                                <directory>${project.build.directory}/input-data</directory>
-                                <includes>
-                                    <include>**/*.zip</include>
-                                </includes>
-                            </fileset>
-                        </configuration>
-                        <id>load-data</id>
+                        <phase>initialize</phase>
                         <goals>
-                            <goal>load-data</goal>
-                        </goals>
-                    </execution>
-                    <!-- Run owl transformer (process-classes) -->
-                    <execution>
-                        <id>owl-transform</id>
-                        <goals>
-                            <goal>run-owl-transformer</goal>
-                        </goals>
-                    </execution>
-                    <!-- Export unreasoned data as a protocol buffers zip file (package) -->
-                    <execution>
-                        <id>${project.artifactId}-unreasoned-export</id>
-                        <goals>
-                            <goal>export-tinkar-data</goal>
+                            <goal>read-project-properties</goal>
                         </goals>
                         <configuration>
-                            <fileName>${data-artifact.prefix}-unreasoned-pb.zip</fileName>
-                        </configuration>
-                    </execution>
-                    <!-- Run full reasoner (process-classes) -->
-                    <execution>
-                        <id>${project.artifactId}-full-reasoner</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>run-full-reasoner</goal>
-                        </goals>
-                    </execution>
-                    <!-- Export reasoned data as a protocol buffers zip file (package) -->
-                    <execution>
-                        <id>${project.artifactId}-reasoned-export</id>
-                        <goals>
-                            <goal>export-tinkar-data</goal>
-                        </goals>
-                        <configuration>
-                            <exportDirectory>${project.build.directory}</exportDirectory>
-                            <fileName>${data-artifact.prefix}-reasoned-pb.zip</fileName>
+                            <files>
+                                <file>${data-properties.path}</file>
+                            </files>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>dev.ikm.maven</groupId>
-                <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-                <configuration>
-                    <namespaceString>${origin.namespace}</namespaceString>
-                    <datastorePath>${project.build.directory}/datastore</datastorePath>
-<!--                    <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>-->
-                    <inputDirectoryPath>${project.build.directory}/origin-data</inputDirectoryPath>
-                    <dataOutputPath>${project.build.directory}</dataOutputPath>
-                    <skipUnzip>true</skipUnzip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-snomed-transformation</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run-snomed-transformation</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!-- Custom install each artifact using a different GAV configuration -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-install-plugin</artifactId>
                 <configuration>
-                    <finalName>${data-artifact.prefix}</finalName>
-                    <attach>false</attach>
-                    <inlineDescriptors>
-                        <inlineDescriptor>
-                            <formats>
-                                <format>zip</format>
-                            </formats>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.build.directory}/datastore</directory>
-                                    <includes>
-                                        <include>**</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>lucene/**</exclude>
-                                    </excludes>
-                                </fileSet>
-                            </fileSets>
-                            <includeBaseDirectory>false</includeBaseDirectory>
-                        </inlineDescriptor>
-                    </inlineDescriptors>
+                    <groupId>${data-artifact.groupId}</groupId>
+                    <artifactId>${data-artifact.artifactId}</artifactId>
+                    <version>${data-artifact.version}</version>
+                    <pomFile>${project.build.directory}/data-artifact-pom.xml</pomFile>
                 </configuration>
                 <executions>
-                    <!-- Zip up unreasoned spinedarray database -->
                     <execution>
-                        <id>unreasoned-sa-zip</id>
-                        <phase>process-classes</phase> <!-- Overriding default phase: force this execution before reasoning -->
+                        <id>install-properties-artifact</id>
                         <goals>
-                            <goal>single</goal>
+                            <goal>install-file</goal>
                         </goals>
+                        <phase>install</phase>
                         <configuration>
-                            <inlineDescriptors>
-                                <inlineDescriptor>
-                                    <id>unreasoned-sa</id>
-                                    <fileSets>
-                                        <fileSet>
-                                            <outputDirectory>${data-artifact.prefix}-unreasoned-sa</outputDirectory>
-                                        </fileSet>
-                                    </fileSets>
-                                </inlineDescriptor>
-                            </inlineDescriptors>
+                            <file>${data-properties.path}</file>
+                            <packaging>properties</packaging>
                         </configuration>
                     </execution>
-                    <!-- Zip up reasoned spinedarray database -->
                     <execution>
-                        <phase>package</phase>
-                        <id>reasoned-sa-zip</id>
+                        <id>install-pipeline-definition</id>
+                        <phase>install</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <inlineDescriptors>
-                                <inlineDescriptor>
-                                    <id>reasoned-sa</id>
-                                    <fileSets>
-                                        <fileSet>
-                                            <outputDirectory>${data-artifact.prefix}-reasoned-sa</outputDirectory>
-                                        </fileSet>
-                                    </fileSets>
-                                </inlineDescriptor>
-                            </inlineDescriptors>
+                            <file>${project.basedir}/pom.xml</file>
+                            <classifier>pipeline</classifier>
+                            <packaging>xml</packaging>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <!-- Attach reasoned and unreasoned exports to the artifact -->
-                <executions>
                     <execution>
-                        <id>attach-artifacts</id>
-                        <phase>package</phase>
+                        <id>install-unreasoned-sa-artifact</id>
+                        <phase>install</phase>
                         <goals>
-                            <goal>attach-artifact</goal>
+                            <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>${project.build.directory}/${data-artifact.prefix}-reasoned-pb.zip</file>
-                                    <type>zip</type>
-                                    <classifier>reasoned-pb</classifier>
-                                </artifact>
-                                <artifact>
-                                    <file>${project.build.directory}/${data-artifact.prefix}-unreasoned-pb.zip</file>
-                                    <type>zip</type>
-                                    <classifier>unreasoned-pb</classifier>
-                                </artifact>
-                            </artifacts>
+                            <file>${data-artifact.path-prefix}-unreasoned-sa.zip</file>
+                            <classifier>unreasoned-sa</classifier>
+                            <packaging>zip</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-reasoned-sa-artifact</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <file>${data-artifact.path-prefix}-reasoned-sa.zip</file>
+                            <classifier>reasoned-sa</classifier>
+                            <packaging>zip</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-unreasoned-pb-artifact</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <file>${data-artifact.path-prefix}-unreasoned-pb.zip</file>
+                            <classifier>unreasoned-pb</classifier>
+                            <packaging>zip</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-reasoned-pb-artifact</id>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <file>${data-artifact.path-prefix}-reasoned-pb.zip</file>
+                            <classifier>reasoned-pb</classifier>
+                            <packaging>zip</packaging>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>generateData</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>dev.ikm.maven.tinkar</groupId>
+                        <artifactId>tinkar-maven-plugin</artifactId>
+                        <executions>
+                            <!-- Load Input Data (generate-resources) -->
+                            <execution>
+                                <configuration>
+                                    <fileset>
+                                        <directory>${project.build.directory}/input-data</directory>
+                                        <includes>
+                                            <include>**/*.zip</include>
+                                        </includes>
+                                    </fileset>
+                                </configuration>
+                                <id>load-data</id>
+                                <goals>
+                                    <goal>load-data</goal>
+                                </goals>
+                            </execution>
+                            <!-- Run owl transformer (process-classes) -->
+                            <execution>
+                                <id>owl-transform</id>
+                                <goals>
+                                    <goal>run-owl-transformer</goal>
+                                </goals>
+                            </execution>
+                            <!-- Export unreasoned data as a protocol buffers zip file (package) -->
+                            <execution>
+                                <id>${project.artifactId}-unreasoned-export</id>
+                                <goals>
+                                    <goal>export-tinkar-data</goal>
+                                </goals>
+                                <configuration>
+                                    <fileName>${data-artifact.prefix}-unreasoned-pb.zip</fileName>
+                                </configuration>
+                            </execution>
+                            <!-- Run full reasoner (process-classes) -->
+                            <execution>
+                                <id>${project.artifactId}-full-reasoner</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>run-full-reasoner</goal>
+                                </goals>
+                            </execution>
+                            <!-- Export reasoned data as a protocol buffers zip file (package) -->
+                            <execution>
+                                <id>${project.artifactId}-reasoned-export</id>
+                                <goals>
+                                    <goal>export-tinkar-data</goal>
+                                </goals>
+                                <configuration>
+                                    <exportDirectory>${project.build.directory}</exportDirectory>
+                                    <fileName>${data-artifact.prefix}-reasoned-pb.zip</fileName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>dev.ikm.maven</groupId>
+                        <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                        <version>1.0.0-SNAPSHOT</version>
+                        <configuration>
+                            <namespaceString>${origin.namespace}</namespaceString>
+                            <datastorePath>${project.build.directory}/datastore</datastorePath>
+                            <inputDirectoryPath>${project.build.directory}/origin-data</inputDirectoryPath>
+                            <dataOutputPath>${project.build.directory}</dataOutputPath>
+                            <skipUnzip>true</skipUnzip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>run-snomed-transformation</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run-snomed-transformation</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <finalName>${data-artifact.prefix}</finalName>
+                            <attach>false</attach>
+                            <inlineDescriptors>
+                                <inlineDescriptor>
+                                    <formats>
+                                        <format>zip</format>
+                                    </formats>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${project.build.directory}/datastore</directory>
+                                            <includes>
+                                                <include>**</include>
+                                            </includes>
+                                            <excludes>
+                                                <exclude>lucene/**</exclude>
+                                            </excludes>
+                                        </fileSet>
+                                    </fileSets>
+                                    <includeBaseDirectory>false</includeBaseDirectory>
+                                </inlineDescriptor>
+                            </inlineDescriptors>
+                        </configuration>
+                        <executions>
+                            <!-- Zip up unreasoned spinedarray database -->
+                            <execution>
+                                <id>unreasoned-sa-zip</id>
+                                <phase>process-classes</phase> <!-- Overriding default phase: force this execution before reasoning -->
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <inlineDescriptors>
+                                        <inlineDescriptor>
+                                            <id>unreasoned-sa</id>
+                                            <fileSets>
+                                                <fileSet>
+                                                    <outputDirectory>${data-artifact.prefix}-unreasoned-sa</outputDirectory>
+                                                </fileSet>
+                                            </fileSets>
+                                        </inlineDescriptor>
+                                    </inlineDescriptors>
+                                </configuration>
+                            </execution>
+                            <!-- Zip up reasoned spinedarray database -->
+                            <execution>
+                                <phase>package</phase>
+                                <id>reasoned-sa-zip</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <inlineDescriptors>
+                                        <inlineDescriptor>
+                                            <id>reasoned-sa</id>
+                                            <fileSets>
+                                                <fileSet>
+                                                    <outputDirectory>${data-artifact.prefix}-reasoned-sa</outputDirectory>
+                                                </fileSet>
+                                            </fileSets>
+                                        </inlineDescriptor>
+                                    </inlineDescriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--            <plugin>-->
+                    <!--                <groupId>org.codehaus.mojo</groupId>-->
+                    <!--                <artifactId>build-helper-maven-plugin</artifactId>-->
+                    <!--                &lt;!&ndash; Attach reasoned and unreasoned exports to the artifact &ndash;&gt;-->
+                    <!--                <executions>-->
+                    <!--                    <execution>-->
+                    <!--                        <id>attach-artifacts</id>-->
+                    <!--                        <phase>package</phase>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>attach-artifact</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <configuration>-->
+                    <!--                            <artifacts>-->
+                    <!--                                <artifact>-->
+                    <!--                                    <file>${project.build.directory}/${data-artifact.prefix}-reasoned-pb.zip</file>-->
+                    <!--                                    <type>zip</type>-->
+                    <!--                                    <classifier>reasoned-pb</classifier>-->
+                    <!--                                </artifact>-->
+                    <!--                                <artifact>-->
+                    <!--                                    <file>${project.build.directory}/${data-artifact.prefix}-unreasoned-pb.zip</file>-->
+                    <!--                                    <type>zip</type>-->
+                    <!--                                    <classifier>unreasoned-pb</classifier>-->
+                    <!--                                </artifact>-->
+                    <!--                            </artifacts>-->
+                    <!--                        </configuration>-->
+                    <!--                    </execution>-->
+                    <!--                </executions>-->
+                    <!--            </plugin>-->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>templating-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>inject-maven-properties</id>
+                                <goals>
+                                    <goal>filter-sources</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceDirectory>data-artifact-pom-template</sourceDirectory>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <skipPoms>false</skipPoms>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploySnapshotDataArtifacts</id>
+            <activation>
+                <property>
+                    <name>repositoryId</name>
+                    <value>!central</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deploy-snapshot-artifacts</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy-file</goal>
+                                </goals>
+                                <configuration>
+                                    <repositoryId>${repositoryId}</repositoryId>
+                                    <url>${deployRepositoryUrl}</url>
+                                    <groupId>${data-artifact.groupId}</groupId>
+                                    <artifactId>${data-artifact.artifactId}</artifactId>
+                                    <version>${data-artifact.version}</version>
+                                    <pomFile>${project.build.directory}/data-artifact-pom.xml</pomFile>
+                                    <file>${data-properties.path}</file>
+                                    <packaging>properties</packaging>
+                                    <files>${deploymentFiles}</files>
+                                    <classifiers>${deploymentClassifiers}</classifiers>
+                                    <types>${deploymentTypes}</types>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Get the Repo URL from the altDeploymentRepository -->
+            <id>altDeployRepo</id>
+            <activation>
+                <property>
+                    <name>altDeploymentRepository</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.1tchy</groupId>
+                        <artifactId>variable-search-replace-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <text>${altDeploymentRepository}</text>
+                                    <search>^[^:]*::</search>
+                                    <replacement></replacement>
+                                    <variableName>deployRepositoryUrl</variableName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

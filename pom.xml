@@ -36,20 +36,12 @@
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <maven-clean-plugin.version>3.3.1</maven-clean-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-        <!-- origin -->
-<!--        <origin.working.directory>${project.build.directory}/origin-sources</origin.working.directory>-->
-<!--        <source.version>20250701T120000Z</source.version>-->
-<!--        <source.zip>${user.home}/Downloads/SnomedCT_InternationalRF2_PRODUCTION_${source.version}.zip</source.zip>-->
-<!--        <starterSetLocation>${user.home}/Downloads</starterSetLocation>-->
-<!--        <starterSet>tinkar-starter-data-20250725-unreasoned-pb.zip</starterSet>-->
-<!--        <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>-->
-<!--        <dataStore>snomedct-international</dataStore>-->
 
-        <!--tinkar-starter-data.version>1.7.0</tinkar-starter-data.version-->
-        <!--tinkar-starter-data.version>20250729</tinkar-starter-data.version-->
-        <tinkar-starter-data.version>20250808</tinkar-starter-data.version>
-        <data-artifact.prefix>${project.artifactId}-${project.version}</data-artifact.prefix>
-        <snomedct-origin-data.version>international-20250101T120000Z+1.0.0-SNAPSHOT</snomedct-origin-data.version>
+        <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
+        <variable-search-replace-plugin.version>1.3</variable-search-replace-plugin.version>
+        <templating-maven-plugin.version>3.0.0</templating-maven-plugin.version>
+
+        <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
     </properties>
 
     <dependencyManagement>
@@ -224,6 +216,28 @@
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
                     <inherited>false</inherited>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>${properties-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.1tchy</groupId>
+                    <artifactId>variable-search-replace-plugin</artifactId>
+                    <version>${variable-search-replace-plugin.version}</version>
+                </plugin>
+                <!-- Templating Plugin-->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>templating-maven-plugin</artifactId>
+                    <version>${templating-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
