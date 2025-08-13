@@ -53,7 +53,7 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
                         Session session = composer.open(State.ACTIVE, time, author, module, path);
 
                         UUID snomedUuid = SnomedUtility.generateUUID(namespace, data[REFERENCED_COMPONENT_ID]);
-                        UUID gmdnUuid = SnomedUtility.generateUUID(namespace, data[MAP_TARGET]);
+                        UUID gmdnUuid = SnomedUtility.generateUUID(namespace, "GMDN_" + data[MAP_TARGET]);
 
                         session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
                                 .concept(EntityProxy.Concept.make(PublicIds.of(snomedUuid, gmdnUuid)))
