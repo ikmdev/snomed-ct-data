@@ -4,7 +4,6 @@ import dev.ikm.tinkar.common.service.CachingService;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
-import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
@@ -27,11 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -65,8 +66,6 @@ public class SnomedTransformationMojo extends AbstractMojo {
             LOG.info("inputDirectoryPath: " + inputDirectoryPath);
             File inputFileOrDirectory;
             if (skipUnzip) {
-                // Let lucene shut down???
-                //Thread.sleep(10000);
                 inputFileOrDirectory = new File(inputDirectoryPath);
             } else {
                 String unzippedData = unzipRawData(inputDirectoryPath);
@@ -105,32 +104,19 @@ public class SnomedTransformationMojo extends AbstractMojo {
                 zis.closeEntry();
             }
         }
-        File terminologyFolder = searchTerminologyFolder(outputDirectory);
-
-        if (terminologyFolder != null) {
-            return terminologyFolder.getAbsolutePath();
-        } else {
-            throw new FileNotFoundException("The 'Terminology' folder could not be found...");
-        }
+        return outputDirectory.getAbsolutePath();
     }
 
-    private static File searchTerminologyFolder(File dir) {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isDirectory() && file.getName().equals("Terminology") &&
-                            file.getParentFile().getName().equals("Full")) {
-                        return file;
-                    }
-                    File found = searchTerminologyFolder(file);
-                    if (found != null) {
-                        return found;
-                    }
-                }
-            }
+    private Path searchTerminologyFolder(File baseDirectory, String parentDir) {
+        Path dataDirectory = baseDirectory.toPath().resolve("src", parentDir);
+        try (Stream<Path> stream = Files.walk(dataDirectory)) {
+            return stream
+                    .filter(file -> file.toFile().isDirectory() && "Full".equals(file.toFile().getName()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("'Terminology' folder could not be found in: " + dataDirectory));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-        return null;
     }
 
     private void validateInputDirectory(File inputFileOrDirectory) throws MojoExecutionException {
@@ -142,10 +128,10 @@ public class SnomedTransformationMojo extends AbstractMojo {
     /**
      * Transforms each snomed file in a directory based on filename
      *
-     * @param datastore            location of datastore to write entities to
-     * @param inputFileOrDirectory directory containing snomed files
+     * @param datastore     location of datastore to write entities to
+     * @param baseDirectory directory containing origin files
      */
-    public void transformFile(File datastore, File inputFileOrDirectory) {
+    public void transformFile(File datastore, File baseDirectory) {
         LOG.info("########## Snomed Transformer Starting...");
         initializeDatastore(datastore);
 
@@ -153,7 +139,17 @@ public class SnomedTransformationMojo extends AbstractMojo {
         try {
             Composer composer = new Composer("Snomed Transformer Composer");
             createAuthor(composer);
-            processFilesFromInput(inputFileOrDirectory, composer);
+
+            File snomedDirectory = searchTerminologyFolder(baseDirectory, "snomedFull").resolve("Terminology").toFile();
+
+            if (snomedDirectory.getAbsolutePath().contains("International")) {
+                LOG.info("Processing GMDN Datasets...");
+                processFilesFromInput(baseDirectory.toPath().resolve("src", "gmdnDevice").toFile(), composer);
+                processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping").resolve("Refset", "Map").toFile(), composer);
+            }
+
+            processFilesFromInput(snomedDirectory, composer);
+
             composer.commitAllSessions();
         } finally {
             EntityService.get().endLoadPhase();
@@ -164,7 +160,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
 
     private void createAuthor(Composer composer) {
         EntityProxy.Concept snomedAuthor = SnomedUtility.getUserConcept(namespace);
-        EntityProxy.Concept snomedCoreModule = EntityProxy.Concept.make("SNOMED CT Core Module", UuidT5Generator.get(namespace, "900000000000207008"));
+        EntityProxy.Concept snomedCoreModule = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
 
         Session session = composer.open(State.ACTIVE,
                 snomedAuthor,
@@ -178,7 +174,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
                         .text("IHTSDO SNOMED CT Author")
                         .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
                 )
-                .attach((Synonym synonym)-> synonym
+                .attach((Synonym synonym) -> synonym
                         .language(ENGLISH_LANGUAGE)
                         .text("SNOMED CT Author")
                         .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
@@ -197,6 +193,7 @@ public class SnomedTransformationMojo extends AbstractMojo {
                 )
         );
     }
+
     private void initializeDatastore(File datastore) {
         CachingService.clearAll();
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastore);
@@ -205,46 +202,58 @@ public class SnomedTransformationMojo extends AbstractMojo {
     }
 
     private void processFilesFromInput(File inputFileOrDirectory, Composer composer) {
+        LOG.info("processFilesFromInput: {}", inputFileOrDirectory);
         if (inputFileOrDirectory.isDirectory()) {
             Arrays.stream(inputFileOrDirectory.listFiles())
-                    .filter(file -> file.getName().endsWith(".txt"))
+                    .filter(file -> file.getName().endsWith(".txt") || file.getName().endsWith(".xml"))
                     .forEach(file -> processIndividualFile(file, composer));
-        } else if (inputFileOrDirectory.isFile() && inputFileOrDirectory.getName().endsWith(".txt")) {
+        } else if (inputFileOrDirectory.isFile() && (inputFileOrDirectory.getName().endsWith(".txt")
+                || inputFileOrDirectory.getName().endsWith(".xml"))) {
             processIndividualFile(inputFileOrDirectory, composer);
         }
     }
 
     private void processIndividualFile(File file, Composer composer) {
-        String fileName = file.getName();
-        Transformer transformer = getTransformer(fileName);
+        String absolutePath = file.getAbsolutePath();
+        Transformer transformer = getTransformer(absolutePath);
 
         if (transformer != null) {
-            LOG.info("### Transformer Starting for file: " + fileName);
+            LOG.info("### Transformer Starting for file: " + file.getName());
             transformer.transform(file, composer);
-            LOG.info("### Transformer Finishing for file : " + fileName);
+            LOG.info("### Transformer Finishing for file: " + file.getName());
         } else {
-            LOG.info("This file cannot be processed at the moment : " + file.getName());
+            LOG.warn("This file cannot be processed: " + absolutePath);
         }
     }
 
     /**
      * Checks files for matching keywords and uses appropriate transformer
      *
-     * @param fileName File for Transformer match
+     * @param absolutePath of file for Transformer match
      */
-    private Transformer getTransformer(String fileName) {
-        if (fileName.contains("Concept")) {
-            return new ConceptTransformer(namespace);
-        } else if (fileName.contains("Definition")) {
-            return new DefinitionTransformer(namespace);
-        } else if (fileName.contains("Description")) {
-            return new DescriptionTransformer(namespace);
-        } else if (fileName.contains("Language")) {
-            return new LanguageTransformer(namespace);
-        } else if (fileName.contains("Identifier")) {
-            return new IdentifierTransformer(namespace);
-        } else if (fileName.contains("OWLExpression")) {
-            return new AxiomSyntaxTransformer(namespace);
+    private Transformer getTransformer(String absolutePath) {
+        if (absolutePath.contains("snomedFull")) {
+            if (absolutePath.contains("Concept")) {
+                return new ConceptTransformer(namespace);
+            } else if (absolutePath.contains("Definition")) {
+                return new DefinitionTransformer(namespace);
+            } else if (absolutePath.contains("Description")) {
+                return new DescriptionTransformer(namespace);
+            } else if (absolutePath.contains("Language")) { // TODO this file is not in Terminology directory
+                return new LanguageTransformer(namespace);
+            } else if (absolutePath.contains("Identifier")) {
+                return new IdentifierTransformer(namespace);
+            } else if (absolutePath.contains("OWLExpression")) {
+                return new AxiomSyntaxTransformer(namespace);
+            }
+        } else if (absolutePath.contains("gmdnMapping")) {
+            if (absolutePath.contains("GMDNMapSimpleMapFull")) {
+                return new SnomedToGmdnTransformer(namespace);
+            }
+        } else if (absolutePath.contains("gmdnDevice")) {
+            if (absolutePath.contains("gmdnData")) {
+                return new GmdnTermsTransformer(namespace);
+            }
         }
         return null;
     }

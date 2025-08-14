@@ -23,7 +23,7 @@ public class SnomedElkSnomedClassifierTestIT extends ElkSnomedClassifierTestBase
 
     @BeforeAll
     public static void startPrimitiveData() {
-        origin = IntegrationTestUtils.findOriginPath("SnomedCT_").resolve("Snapshot", "Terminology");
+        origin = IntegrationTestUtils.findOriginPath("snomedFull", "SnomedCT_").resolve("Snapshot", "Terminology");
         File datastorePath = new File(System.getProperty("datastorePath"));
         LOG.info("datastorePath: {}", datastorePath);
         ServiceProperties.set(ServiceKeys.DATA_STORE_ROOT, datastorePath);
