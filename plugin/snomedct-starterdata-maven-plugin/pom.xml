@@ -7,11 +7,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
+    <artifactId>snomedct-starterdata-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>snomed-ct-starterdata-maven-plugin</name>
+    <name>snomedct-starterdata-maven-plugin</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>

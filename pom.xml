@@ -4,28 +4,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>dev.ikm.tinkar</groupId>
-        <artifactId>snomed-ct-data-bom</artifactId>
-        <version>1.17.0</version>
+        <groupId>dev.ikm.build</groupId>
+        <artifactId>java-parent</artifactId>
+        <version>1.63.0</version>
         <relativePath/>
     </parent>
 
-    <groupId>dev.ikm.snomedct</groupId>
-    <artifactId>snomed-ct-data</artifactId>
+    <groupId>dev.ikm.maven.snomedct</groupId>
+    <artifactId>snomedct-data-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>SNOMED CT Data</name>
 
     <modules>
-<!--        <module>snomed-ct-origin</module>-->
+<!--        <module>snomedct-origin</module>-->
         <module>plugin</module>
-        <module>snomed-ct-starterdata</module>
-        <module>snomed-ct-pipeline</module>
-<!--        <module>snomed-ct-owl-transform</module>-->
-<!--        <module>snomed-ct-reasoner</module>-->
-<!--        <module>snomed-ct-integration</module>-->
-<!--        <module>snomed-ct-export</module>-->
+<!--        <module>snomedct-starterdata</module>-->
+        <module>snomedct-pipeline</module>
+<!--        <module>snomedct-owl-transform</module>-->
+<!--        <module>snomedct-reasoner</module>-->
+<!--        <module>snomedct-integration</module>-->
+<!--        <module>snomedct-export</module>-->
     </modules>
 
     <properties>
@@ -42,6 +42,13 @@
         <templating-maven-plugin.version>3.0.0</templating-maven-plugin.version>
 
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>
+
+        <eclipse-collections-api.version>12.0.0.M3-r2</eclipse-collections-api.version>
+        <maven-plugin-plugin.version>3.13.0</maven-plugin-plugin.version>
+        <maven-plugin-api.version>3.9.9</maven-plugin-api.version>
+        <maven-plugin-annotations.version>3.15.0</maven-plugin-annotations.version>
+        <tinkar-composer.version>1.8.0</tinkar-composer.version>
+        <tinkar-core.version>1.118.0</tinkar-core.version>
     </properties>
 
     <dependencyManagement>
@@ -156,11 +163,11 @@
                 <artifactId>tinkar-maven-toolkit</artifactId>
                 <version>${maven-artifacts.version}</version>
             </dependency>
-            <dependency>
-                <groupId>dev.ikm.data.snomedct</groupId>
-                <artifactId>snomedct-origin</artifactId>
-                <version>international-20250101T120000Z+1.0.0-20250328.210449-2</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>dev.ikm.data.snomedct</groupId>-->
+<!--                <artifactId>snomedct-origin</artifactId>-->
+<!--                <version>international-20250101T120000Z+1.0.0-20250328.210449-2</version>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
     <build>
@@ -208,7 +215,7 @@
                 </plugin>
                 <plugin>
                     <groupId>dev.ikm.maven</groupId>
-                    <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
+                    <artifactId>snomedct-starterdata-maven-plugin</artifactId>
                     <version>1.0.0-SNAPSHOT</version>
                 </plugin>
                 <!-- Skip Staging Plugin -->
@@ -216,6 +223,9 @@
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
                     <inherited>false</inherited>
+                    <configuration>
+                        <skipPublishing>true</skipPublishing>
+                    </configuration>
                 </plugin>
 
                 <plugin>

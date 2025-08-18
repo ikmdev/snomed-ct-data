@@ -2,16 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>dev.ikm.snomedct</groupId>
-        <artifactId>snomed-ct-data</artifactId>
+        <groupId>dev.ikm.maven.snomedct</groupId>
+        <artifactId>snomedct-data-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>dev.ikm.maven</groupId>
-    <artifactId>snomed-ct-pipeline</artifactId>
+    <artifactId>snomedct-pipeline</artifactId>
     <packaging>jar</packaging>
 
-    <name>snomed-ct-pipeline</name>
+    <name>snomedct-pipeline</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,6 +18,11 @@
         <data-properties.artifactId>snomedct-data-properties</data-properties.artifactId>
         <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
+
+        <!-- origin -->
+        <packager.name>IKM Dev</packager.name>
+        <origin.url>https://www.nlm.nih.gov/healthit/snomedct/us_edition.html</origin.url>
+        <origin.namespace>3094dbd1-60cf-44a6-92e3-0bb32ca4d3de</origin.namespace>
 
         <!-- Properties for Ease of Use -->
         <data-properties.path>${project.build.directory}/${data-properties.artifactId}-${data-properties.version}.properties</data-properties.path>
@@ -57,33 +61,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-origin-data-dependency</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-<!--                                <artifactItem>-->
-<!--                                    <groupId>dev.ikm.data.snomedct</groupId>-->
-<!--                                    <artifactId>snomedct-origin</artifactId>-->
-<!--                                    <version>${snomedct-origin-data.version}</version>-->
-<!--                                    <type>zip</type>-->
-<!--                                    <overWrite>true</overWrite>-->
-<!--                                    <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>-->
-<!--                                </artifactItem>-->
-                                <artifactItem>
-                                    <groupId>dev.ikm.data.snomedct</groupId>
-                                    <artifactId>snomedct-origin</artifactId>
-                                    <version>international-20250101T120000Z+1.0.0-SNAPSHOT</version>
-                                    <type>zip</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>copy-starter-data-dependencies</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -92,13 +69,32 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>snomed-ct-starterdata</artifactId>
-                                    <version>${project.version}</version>
+                                    <groupId>${tinkar-starter-data.groupId}</groupId>
+                                    <artifactId>${tinkar-starter-data.artifactId}</artifactId>
+                                    <version>${tinkar-starter-data.version}</version>
                                     <classifier>unreasoned-pb</classifier>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/input-data</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-origin-data-dependency</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>dev.ikm.data.snomedct</groupId>
+                                    <artifactId>snomedct-origin</artifactId>
+                                    <version>${snomedct-origin-data.qualifier}-${snomedct-origin-data.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/origin-data/snomedct-origin</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -221,6 +217,10 @@
                         <executions>
                             <!-- Load Input Data (generate-resources) -->
                             <execution>
+                                <id>${project.artifactId}-load-input-data</id>
+                                <goals>
+                                    <goal>load-data</goal>
+                                </goals>
                                 <configuration>
                                     <fileset>
                                         <directory>${project.build.directory}/input-data</directory>
@@ -229,14 +229,10 @@
                                         </includes>
                                     </fileset>
                                 </configuration>
-                                <id>load-data</id>
-                                <goals>
-                                    <goal>load-data</goal>
-                                </goals>
                             </execution>
                             <!-- Run owl transformer (process-classes) -->
                             <execution>
-                                <id>owl-transform</id>
+                                <id>${project.artifactId}-owl-transform</id>
                                 <goals>
                                     <goal>run-owl-transformer</goal>
                                 </goals>
@@ -272,9 +268,28 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- Build Snomed Starter Data-->
                     <plugin>
                         <groupId>dev.ikm.maven</groupId>
-                        <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                        <artifactId>snomedct-starterdata-maven-plugin</artifactId>
+                        <version>1.0.0-SNAPSHOT</version>
+                        <configuration>
+                            <namespaceString>${origin.namespace}</namespaceString>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>run-snomed-starterdata</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run-snomed-starterdata</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Build Snomed Data-->
+                    <plugin>
+                        <groupId>dev.ikm.maven</groupId>
+                        <artifactId>snomedct-transformation-maven-plugin</artifactId>
                         <version>1.0.0-SNAPSHOT</version>
                         <configuration>
                             <namespaceString>${origin.namespace}</namespaceString>
@@ -299,25 +314,6 @@
                         <configuration>
                             <finalName>${data-artifact.prefix}</finalName>
                             <attach>false</attach>
-                            <inlineDescriptors>
-                                <inlineDescriptor>
-                                    <formats>
-                                        <format>zip</format>
-                                    </formats>
-                                    <fileSets>
-                                        <fileSet>
-                                            <directory>${project.build.directory}/datastore</directory>
-                                            <includes>
-                                                <include>**</include>
-                                            </includes>
-                                            <excludes>
-                                                <exclude>lucene/**</exclude>
-                                            </excludes>
-                                        </fileSet>
-                                    </fileSets>
-                                    <includeBaseDirectory>false</includeBaseDirectory>
-                                </inlineDescriptor>
-                            </inlineDescriptors>
                         </configuration>
                         <executions>
                             <!-- Zip up unreasoned spinedarray database -->
@@ -328,16 +324,9 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <inlineDescriptors>
-                                        <inlineDescriptor>
-                                            <id>unreasoned-sa</id>
-                                            <fileSets>
-                                                <fileSet>
-                                                    <outputDirectory>${data-artifact.prefix}-unreasoned-sa</outputDirectory>
-                                                </fileSet>
-                                            </fileSets>
-                                        </inlineDescriptor>
-                                    </inlineDescriptors>
+                                    <descriptors>
+                                        <descriptor>src/assembly/unreasoned-sa.xml</descriptor>
+                                    </descriptors>
                                 </configuration>
                             </execution>
                             <!-- Zip up reasoned spinedarray database -->
@@ -348,48 +337,13 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <inlineDescriptors>
-                                        <inlineDescriptor>
-                                            <id>reasoned-sa</id>
-                                            <fileSets>
-                                                <fileSet>
-                                                    <outputDirectory>${data-artifact.prefix}-reasoned-sa</outputDirectory>
-                                                </fileSet>
-                                            </fileSets>
-                                        </inlineDescriptor>
-                                    </inlineDescriptors>
+                                    <descriptors>
+                                        <descriptor>src/assembly/reasoned-sa.xml</descriptor>
+                                    </descriptors>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    <!--            <plugin>-->
-                    <!--                <groupId>org.codehaus.mojo</groupId>-->
-                    <!--                <artifactId>build-helper-maven-plugin</artifactId>-->
-                    <!--                &lt;!&ndash; Attach reasoned and unreasoned exports to the artifact &ndash;&gt;-->
-                    <!--                <executions>-->
-                    <!--                    <execution>-->
-                    <!--                        <id>attach-artifacts</id>-->
-                    <!--                        <phase>package</phase>-->
-                    <!--                        <goals>-->
-                    <!--                            <goal>attach-artifact</goal>-->
-                    <!--                        </goals>-->
-                    <!--                        <configuration>-->
-                    <!--                            <artifacts>-->
-                    <!--                                <artifact>-->
-                    <!--                                    <file>${project.build.directory}/${data-artifact.prefix}-reasoned-pb.zip</file>-->
-                    <!--                                    <type>zip</type>-->
-                    <!--                                    <classifier>reasoned-pb</classifier>-->
-                    <!--                                </artifact>-->
-                    <!--                                <artifact>-->
-                    <!--                                    <file>${project.build.directory}/${data-artifact.prefix}-unreasoned-pb.zip</file>-->
-                    <!--                                    <type>zip</type>-->
-                    <!--                                    <classifier>unreasoned-pb</classifier>-->
-                    <!--                                </artifact>-->
-                    <!--                            </artifacts>-->
-                    <!--                        </configuration>-->
-                    <!--                    </execution>-->
-                    <!--                </executions>-->
-                    <!--            </plugin>-->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>templating-maven-plugin</artifactId>

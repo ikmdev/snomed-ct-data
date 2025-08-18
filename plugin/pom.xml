@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>dev.ikm.snomedct</groupId>
-        <artifactId>snomed-ct-data</artifactId>
+        <groupId>dev.ikm.maven.snomedct</groupId>
+        <artifactId>snomedct-data-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -14,8 +14,8 @@
     <name>plugin</name>
     <url>http://maven.apache.org</url>
     <modules>
-        <module>snomed-ct-starterdata-maven-plugin</module>
-        <module>snomed-ct-transformation-maven-plugin</module>
+        <module>snomedct-starterdata-maven-plugin</module>
+        <module>snomedct-transformation-maven-plugin</module>
     </modules>
 
     <dependencies>
