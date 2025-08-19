@@ -18,14 +18,8 @@
     <name>SNOMED CT Data</name>
 
     <modules>
-<!--        <module>snomedct-origin</module>-->
         <module>plugin</module>
-<!--        <module>snomedct-starterdata</module>-->
         <module>snomedct-pipeline</module>
-<!--        <module>snomedct-owl-transform</module>-->
-<!--        <module>snomedct-reasoner</module>-->
-<!--        <module>snomedct-integration</module>-->
-<!--        <module>snomedct-export</module>-->
     </modules>
 
     <properties>
