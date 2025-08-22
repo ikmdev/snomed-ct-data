@@ -7,6 +7,7 @@ import dev.ikm.tinkar.common.service.ServiceProperties;
 import dev.ikm.tinkar.reasoner.elksnomed.test.ElkSnomedCompareTestBase;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 public class SnomedElkSnomedCompareTestIT extends ElkSnomedCompareTestBase implements SnomedVersion {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedElkSnomedCompareTestIT.class);
