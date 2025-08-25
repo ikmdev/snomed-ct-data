@@ -189,7 +189,7 @@
             <dependency>
                 <groupId>dev.ikm.elk</groupId>
                 <artifactId>elk-snomed-test</artifactId>
-                <version>0.38.1</version>
+                <version>${elk-snomed-test.version}</version>
             </dependency>
             
             <dependency>
