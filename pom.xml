@@ -69,7 +69,7 @@
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <jupiter.version>5.12.2</jupiter.version>
         <snomed-ct-starterdata-maven-plugin.version>1.0.0-SNAPSHOT</snomed-ct-starterdata-maven-plugin.version>
-
+        <elk-snomed-test.version>0.38.1</elk-snomed-test.version>
         <!-- origin -->
         <packager.name>IKM Dev</packager.name>
         <origin.url>https://www.nlm.nih.gov/healthit/snomedct/us_edition.html</origin.url>
