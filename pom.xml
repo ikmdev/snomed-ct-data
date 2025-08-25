@@ -68,6 +68,7 @@
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <jupiter.version>5.12.2</jupiter.version>
+        <snomed-ct-starterdata-maven-plugin.version>1.0.0-SNAPSHOT</snomed-ct-starterdata-maven-plugin.version>
 
         <!-- origin -->
         <packager.name>IKM Dev</packager.name>
@@ -282,7 +283,7 @@
                 <plugin>
                     <groupId>dev.ikm.maven</groupId>
                     <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
-                    <version>1.0.0-SNAPSHOT</version>
+                    <version>${snomed-ct-starterdata-maven-plugin.version}</version>
                 </plugin>
                 <!-- Skip Staging Plugin -->
                 <plugin>
