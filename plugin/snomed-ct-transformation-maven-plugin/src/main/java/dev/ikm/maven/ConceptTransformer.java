@@ -32,11 +32,12 @@ public class ConceptTransformer extends AbstractTransformer {
 
     /**
      * transforms concept file into entity
+     *
      * @param inputFile concept input txt file
      */
     @Override
-    public void transform(File inputFile, Composer composer){
-        if(inputFile == null || !inputFile.exists() || !inputFile.isFile()){
+    public void transform(File inputFile, Composer composer) {
+        if (inputFile == null || !inputFile.exists() || !inputFile.isFile()) {
             throw new RuntimeException("Concept input file is either null or invalid.");
         }
         EntityProxy.Concept author = SnomedUtility.getUserConcept(namespace);
@@ -49,10 +50,11 @@ public class ConceptTransformer extends AbstractTransformer {
                         State status = Integer.parseInt(data[ACTIVE]) == 1 ? State.ACTIVE : State.INACTIVE;
                         long time = SnomedUtility.snomedTimestampToEpochSeconds(data[EFFECTIVE_TIME]);
                         EntityProxy.Concept moduleIdConcept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[MODULE_ID])));
-                        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace,data[ID])));
+                        EntityProxy.Concept concept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[ID])));
+                        EntityProxy.Semantic snomedIdSemantic = EntityProxy.Semantic.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[ID] + "snomed")));
 
                         Session session = composer.open(status, time, author, moduleIdConcept, path);
-                        if(!data[ID].equals(previousRowId)) {
+                        if (!data[ID].equals(previousRowId)) {
                             session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
                                     .concept(concept)
                                     .attach((Identifier identifier) -> identifier
@@ -60,6 +62,7 @@ public class ConceptTransformer extends AbstractTransformer {
                                             .identifier(concept.asUuidArray()[0].toString())
                                     )
                                     .attach((Identifier identifier) -> identifier
+                                            .semantic(snomedIdSemantic)
                                             .source(TinkarTerm.SCTID)
                                             .identifier(data[ID])
                                     )
