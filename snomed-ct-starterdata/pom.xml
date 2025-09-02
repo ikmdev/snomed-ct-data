@@ -77,24 +77,42 @@
                 <groupId>dev.ikm.maven.tinkar</groupId>
                 <artifactId>tinkar-maven-plugin</artifactId>
                 <version>${maven-artifacts.version}</version>
-                <configuration>
-                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                    <fileset>
-                        <directory>${dataStoreLocation}/input-data</directory>
-                        <includes>
-                            <include>**/*-${tinkar-starter-data.classifier}.zip</include>
-                        </includes>
-                    </fileset>
-                    <isolate>false</isolate>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>load-data</id>
+                        <id>load-data-tinkar-starter-set</id>
                         <phase>install</phase>
                         <goals>
                             <goal>load-data</goal>
                         </goals>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${dataStoreLocation}/input-data</directory>
+                                <includes>
+                                    <include>**/*-${tinkar-starter-data.classifier}.zip</include>
+                                </includes>
+                            </fileset>
+                            <isolate>false</isolate>
+                        </configuration>
                     </execution>
+<!-- TODO Revisit this: current version of Snomed-GMDN starter ZIP has to be loaded AFTER transformations -->
+<!--                    <execution>-->
+<!--                        <id>load-data-snomed-gmdn-starter-set</id>-->
+<!--                        <phase>install</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>load-data</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>-->
+<!--                            <fileset>-->
+<!--                                <directory>${starterSetLocation}</directory>-->
+<!--                                <includes>-->
+<!--                                    <include>**/${starterSet}</include>-->
+<!--                                </includes>-->
+<!--                            </fileset>-->
+<!--                            <isolate>false</isolate>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>

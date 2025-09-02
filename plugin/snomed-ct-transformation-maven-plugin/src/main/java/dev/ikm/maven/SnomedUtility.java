@@ -19,16 +19,12 @@ import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.common.util.time.DateTimeUtil;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
 import dev.ikm.tinkar.common.util.uuid.UuidUtil;
-import dev.ikm.tinkar.entity.Entity;
-import dev.ikm.tinkar.entity.EntityVersion;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.EntityProxy.Concept;
 import dev.ikm.tinkar.terms.TinkarTerm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -38,7 +34,8 @@ import java.util.regex.Pattern;
 public class SnomedUtility {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedUtility.class.getSimpleName());
-    private final List<Entity<? extends EntityVersion>> STAMP_LIST = new ArrayList<>();
+
+    public static final EntityProxy.Pattern SNOMED_TO_GMDN_PATTERN = EntityProxy.Pattern.make(PublicIds.of("893095f7-3dc3-4431-a7cc-679f5c4205d2"));
 
     /**
      * taking time stamp and making it an epoch
@@ -53,7 +50,7 @@ public class SnomedUtility {
      * retrieves user concept
      * @return the snomed author
      */
-        public static Concept getUserConcept(UUID namespace){
+    public static Concept getUserConcept(UUID namespace){
         Concept snomedAuthor = Concept.make("IHTSDO SNOMED CT Author", UuidT5Generator.get(namespace,("IHTSDO SNOMED CT Author")));
         return snomedAuthor;
     }

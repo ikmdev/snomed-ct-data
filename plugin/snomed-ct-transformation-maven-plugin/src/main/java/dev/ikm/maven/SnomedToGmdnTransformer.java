@@ -3,7 +3,8 @@ package dev.ikm.maven;
 import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
-import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
+import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
+import dev.ikm.tinkar.entity.EntityService;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
 import org.slf4j.Logger;
@@ -45,19 +46,34 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
         try (Stream<String> lines = Files.lines(inputFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
                     .map(row -> row.split("\t"))
-                    .filter(data -> "1".equals(data[ACTIVE]))
                     .forEach(data -> {
+                        State state = "1".equals(data[ACTIVE]) ? State.ACTIVE : State.INACTIVE;
                         long time = LocalDate.parse(data[EFFECTIVE_TIME], DATE_FORMAT).atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                         EntityProxy.Concept module = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[MODULE_ID])));
 
-                        Session session = composer.open(State.ACTIVE, time, author, module, path);
+                        EntityProxy.Semantic semantic = EntityProxy.Semantic.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[ID])));
+                        EntityProxy.Concept snomedConcept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, data[REFERENCED_COMPONENT_ID])));
+                        EntityProxy.Concept gmdnConcept = EntityProxy.Concept.make(PublicIds.of(SnomedUtility.generateUUID(namespace, "GMDN_" + data[MAP_TARGET])));
 
-                        UUID snomedUuid = SnomedUtility.generateUUID(namespace, data[REFERENCED_COMPONENT_ID]);
-                        UUID gmdnUuid = SnomedUtility.generateUUID(namespace, "GMDN_" + data[MAP_TARGET]);
+                        Session session = composer.open(state, time, author, module, path);
 
-                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
-                                .concept(EntityProxy.Concept.make(PublicIds.of(snomedUuid, gmdnUuid)))
-                        );
+                        if (EntityService.get().getEntity(snomedConcept.publicId()).isEmpty()) {
+                            LOG.warn("SNOMED Concept does not exist with SCTID: {}", data[REFERENCED_COMPONENT_ID]);
+                            return;
+                        }
+
+                        if (EntityService.get().getEntity(gmdnConcept.publicId()).isEmpty()) {
+                            LOG.warn("GMDN Concept does not exist with term code: {}", data[MAP_TARGET]);
+                            return;
+                        }
+
+                        session.compose((SemanticAssembler assembler) -> assembler
+                                .semantic(semantic)
+                                .pattern(SnomedUtility.SNOMED_TO_GMDN_PATTERN)
+                                .reference(snomedConcept)
+                                .fieldValues(fieldValues -> fieldValues
+                                        .with(gmdnConcept)
+                                ));
 
                         if (conceptCount.incrementAndGet() % 5000 == 0) {
                             LOG.debug("conceptCount: {}", conceptCount.get());
