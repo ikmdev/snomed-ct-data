@@ -72,7 +72,7 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
                                 .pattern(SnomedUtility.SNOMED_TO_GMDN_PATTERN)
                                 .reference(snomedConcept)
                                 .fieldValues(fieldValues -> fieldValues
-                                        .with(gmdnConcept)
+                                        .with(gmdnConcept.nid())
                                 ));
 
                         if (conceptCount.incrementAndGet() % 5000 == 0) {

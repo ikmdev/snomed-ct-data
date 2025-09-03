@@ -95,24 +95,23 @@
                             <isolate>false</isolate>
                         </configuration>
                     </execution>
-<!-- TODO Revisit this: current version of Snomed-GMDN starter ZIP has to be loaded AFTER transformations -->
-<!--                    <execution>-->
-<!--                        <id>load-data-snomed-gmdn-starter-set</id>-->
-<!--                        <phase>install</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>load-data</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>-->
-<!--                            <fileset>-->
-<!--                                <directory>${starterSetLocation}</directory>-->
-<!--                                <includes>-->
-<!--                                    <include>**/${starterSet}</include>-->
-<!--                                </includes>-->
-<!--                            </fileset>-->
-<!--                            <isolate>false</isolate>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
+                    <execution>
+                        <id>load-data-snomed-gmdn-starter-set</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${starterSetLocation}</directory>
+                                <includes>
+                                    <include>**/${starterSet}</include>
+                                </includes>
+                            </fileset>
+                            <isolate>false</isolate>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

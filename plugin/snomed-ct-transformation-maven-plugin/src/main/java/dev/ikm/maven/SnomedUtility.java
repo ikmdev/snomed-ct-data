@@ -35,7 +35,7 @@ public class SnomedUtility {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedUtility.class.getSimpleName());
 
-    public static final EntityProxy.Pattern SNOMED_TO_GMDN_PATTERN = EntityProxy.Pattern.make(PublicIds.of("893095f7-3dc3-4431-a7cc-679f5c4205d2"));
+    public static final EntityProxy.Pattern SNOMED_TO_GMDN_PATTERN = EntityProxy.Pattern.make(PublicIds.of("498729c0-3c84-4272-98f0-4d6f95985589"));
 
     /**
      * taking time stamp and making it an epoch

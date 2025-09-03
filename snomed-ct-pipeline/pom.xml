@@ -36,31 +36,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- TODO Revisit this: current version of Snomed-GMDN starter ZIP has to be loaded AFTER transformations -->
-            <plugin>
-                <groupId>dev.ikm.maven.tinkar</groupId>
-                <artifactId>tinkar-maven-plugin</artifactId>
-                <version>${maven-artifacts.version}</version>
-                <executions>
-                    <execution>
-                        <id>load-data-snomed-gmdn-starter-set</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>load-data</goal>
-                        </goals>
-                        <configuration>
-                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                            <fileset>
-                                <directory>${starterSetLocation}</directory>
-                                <includes>
-                                    <include>**/${starterSet}</include>
-                                </includes>
-                            </fileset>
-                            <isolate>false</isolate>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>
