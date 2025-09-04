@@ -44,4 +44,17 @@
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>dev.ikm.maven</groupId>
+            <artifactId>snomed-ct-starterdata</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.ikm.maven</groupId>
+            <artifactId>gudid-starterdata</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>

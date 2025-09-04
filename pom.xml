@@ -45,7 +45,7 @@
         <gmdn.mapping.source.zip>${user.home}/Downloads/SnomedCT_GMDNMapRelease_PRODUCTION_20250331T120000Z.zip</gmdn.mapping.source.zip>
         <gmdn.device.source.zip>${user.home}/Downloads/gmdnData25_7.zip</gmdn.device.source.zip>
         <starterSetLocation>${user.home}/Downloads</starterSetLocation>
-        <starterSet>GMDN_Starter_Set_Test_09_04.zip</starterSet>
+        <starterSet>GMDN_Starter_Set_2025_09_04.zip</starterSet>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
         <dataStore>snomedct-international</dataStore>   
         

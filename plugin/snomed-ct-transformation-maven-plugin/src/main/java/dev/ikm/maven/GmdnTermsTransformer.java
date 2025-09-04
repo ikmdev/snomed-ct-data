@@ -43,8 +43,7 @@ public class GmdnTermsTransformer extends AbstractTransformer {
      */
     @Override
     public void transform(File inputFile, Composer composer) {
-        // TODO GMDN Agency starter concepts
-        EntityProxy.Concept author = SnomedUtility.getUserConcept(namespace);
+        EntityProxy.Concept author = SnomedTerm.PRIMORDIAL_GMDN_AGENCY;
         EntityProxy.Concept path = SnomedUtility.getPathConcept();
         EntityProxy.Concept module = EntityProxy.Concept.make("SNOMED CT Core Module", SnomedUtility.generateUUID(namespace, "900000000000207008"));
 
@@ -72,11 +71,11 @@ public class GmdnTermsTransformer extends AbstractTransformer {
                                 .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                         )
                         .attach((Identifier identifier) -> identifier
-                                .source(SnomedUtility.SNOMED_TO_GMDN_TERM)
+                                .source(GudidTerm.GUDID_GMDN_TERMS)
                                 .identifier(gmdnTerm.termCode())
                         )
                         .attach((StatedAxiom statedAxiom) -> statedAxiom
-                                .isA(SnomedUtility.SNOMED_TO_GMDN_TERM)
+                                .isA(GudidTerm.GUDID_GMDN_TERMS)
                         )
                 );
             });
