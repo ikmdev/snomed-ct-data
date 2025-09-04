@@ -142,13 +142,13 @@ public class SnomedTransformationMojo extends AbstractMojo {
 
             File snomedDirectory = searchTerminologyFolder(baseDirectory, "snomedFull").resolve("Terminology").toFile();
 
+            processFilesFromInput(snomedDirectory, composer);
+
             if (snomedDirectory.getAbsolutePath().contains("International")) {
                 LOG.info("Processing GMDN Datasets...");
                 processFilesFromInput(baseDirectory.toPath().resolve("src", "gmdnDevice").toFile(), composer);
                 processFilesFromInput(searchTerminologyFolder(baseDirectory, "gmdnMapping").resolve("Refset", "Map").toFile(), composer);
             }
-
-            processFilesFromInput(snomedDirectory, composer);
 
             composer.commitAllSessions();
         } finally {
