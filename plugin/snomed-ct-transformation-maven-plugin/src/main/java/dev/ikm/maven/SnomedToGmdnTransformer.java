@@ -1,6 +1,7 @@
 package dev.ikm.maven;
 
 import dev.ikm.tinkar.common.id.PublicIds;
+import dev.ikm.tinkar.common.id.impl.IntIdSetArray;
 import dev.ikm.tinkar.composer.Composer;
 import dev.ikm.tinkar.composer.Session;
 import dev.ikm.tinkar.composer.assembler.SemanticAssembler;
@@ -72,7 +73,7 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
                                 .pattern(SnomedUtility.SNOMED_TO_GMDN_PATTERN)
                                 .reference(snomedConcept)
                                 .fieldValues(fieldValues -> fieldValues
-                                        .with(gmdnConcept.nid())
+                                        .with(IntIdSetArray.newIntIdSet(gmdnConcept.nid()))
                                 ));
 
                         if (conceptCount.incrementAndGet() % 5000 == 0) {
