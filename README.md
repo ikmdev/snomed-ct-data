@@ -28,5 +28,11 @@ git clone [Rep URL]
 mvn clean install -U "-DMaven.build.cache.enable=false"
 ```
 
-8. You can create a reasoned or unreasoned dataset by either including or commenting out the snomed-ct-data/pom.xml <module>snomed-ct-reasoner</module>
+8. Enter the following command to deploy the dataset:
+
+```bash
+mvn deploy -f snomed-ct-export "-DdeployToNexus=true" "-Dmaven.deploy.skip=true" "-Dmaven.build.cache.enabled=false"
+```
+
+9. You can create a reasoned or unreasoned dataset by either including or commenting out the snomed-ct-data/pom.xml <module>snomed-ct-reasoner</module>
 
