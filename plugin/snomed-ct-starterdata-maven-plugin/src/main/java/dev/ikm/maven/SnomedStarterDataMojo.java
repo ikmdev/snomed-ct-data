@@ -14,7 +14,6 @@ import dev.ikm.tinkar.composer.template.Definition;
 import dev.ikm.tinkar.composer.template.FullyQualifiedName;
 import dev.ikm.tinkar.composer.template.Identifier;
 import dev.ikm.tinkar.composer.template.StatedAxiom;
-import dev.ikm.tinkar.composer.template.StatedNavigation;
 import dev.ikm.tinkar.composer.template.Synonym;
 import dev.ikm.tinkar.terms.EntityProxy;
 import dev.ikm.tinkar.terms.State;
@@ -111,37 +110,6 @@ public class SnomedStarterDataMojo extends AbstractMojo
                     .attach((StatedAxiom statedAxiom) -> statedAxiom
                             .isA(TinkarTerm.IDENTIFIER_SOURCE)
                     )
-            );
-
-            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Terms", GudidTerm.GUDID_GMDN_TERMS);
-            session.compose((ConceptAssembler concept) -> concept
-                    .concept(gmdnIdentifier)
-                    .attach((FullyQualifiedName fqn) -> fqn
-                            .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
-                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
-                    )
-                    .attach((Synonym synonym) -> synonym
-                            .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
-                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
-                    )
-                    .attach((Definition definition) -> definition
-                            .language(ENGLISH_LANGUAGE)
-                            .text("GMDN Terms")
-                            .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE)
-                    )
-                    .attach((Identifier identifier) -> identifier
-                            .source(TinkarTerm.UNIVERSALLY_UNIQUE_IDENTIFIER)
-                            .identifier(gmdnIdentifier.asUuidArray()[0].toString())
-                    )
-                    .attach((StatedAxiom statedAxiom) -> statedAxiom
-                            .isA(TinkarTerm.IDENTIFIER_SOURCE)
-                    )
-                    .attach(new StatedNavigation()
-                            .parents(TinkarTerm.PHENOMENON))
-                    .attach(new StatedAxiom()
-                            .isA(TinkarTerm.PHENOMENON))
             );
 
             EntityProxy.Concept descriptionType = EntityProxy.Concept.make("Description Type", TinkarTerm.DESCRIPTION_TYPE.uuids()[0], UuidT5Generator.get(namespace,"900000000000446008"));

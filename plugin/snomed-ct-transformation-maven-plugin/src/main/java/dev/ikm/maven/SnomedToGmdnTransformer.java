@@ -70,10 +70,10 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
 
                         session.compose((SemanticAssembler assembler) -> assembler
                                 .semantic(semantic)
-                                .pattern(SnomedTerm.PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP_PATTERN)
+                                .pattern(SnomedTerm.GMDN_SNOMED_CT_TO_GMDN_SIMPLE_MAPPING_PATTERN)
                                 .reference(snomedConcept)
                                 .fieldValues(fieldValues -> fieldValues
-                                        .with(IntIdSetArray.newIntIdSet(gmdnConcept.nid()))
+                                        .with(gmdnConcept)
                                 ));
 
                         if (conceptCount.incrementAndGet() % 5000 == 0) {
