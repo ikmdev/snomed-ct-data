@@ -70,7 +70,7 @@ public class SnomedToGmdnTransformer extends AbstractTransformer {
 
                         session.compose((SemanticAssembler assembler) -> assembler
                                 .semantic(semantic)
-                                .pattern(SnomedTerm.GMDN_SNOMED_CT_TO_GMDN_SIMPLE_MAPPING_PATTERN)
+                                .pattern(SnomedTerm.PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAPPING_PATTERN)
                                 .reference(snomedConcept)
                                 .fieldValues(fieldValues -> fieldValues
                                         .with(gmdnConcept)
