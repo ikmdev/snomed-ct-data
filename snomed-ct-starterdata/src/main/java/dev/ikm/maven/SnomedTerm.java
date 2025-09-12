@@ -17,19 +17,6 @@ public class SnomedTerm {
     public static final UUID NAMESPACE = UUID.fromString("3094dbd1-60cf-44a6-92e3-0bb32ca4d3de");
 
     /**
-     * Java binding for the pattern described as GMDN_SNOMED_CT_TO_GMDN_SIMPLE_MAPPING_PATTERN and identified by the following as UUID(s):
-     * <ul>
-     * <li>1daeadad-244f-4974-8f45-c0a166feb0c4
-     * </ul>
-     * <p>
-     * Pattern contains the following fields
-     * <ul>
-     * <li>Field 0 is a PRIMORDIAL_COMPONENT_DISPLAY_FIELD that represents GMDN_TERMS.
-     * </ul>
-     */
-    public static final Pattern GMDN_SNOMED_CT_TO_GMDN_SIMPLE_MAPPING_PATTERN = Pattern.make("GMDN_SNOMED_CT_TO_GMDN_SIMPLE_MAPPING_PATTERN", UUID.fromString("1daeadad-244f-4974-8f45-c0a166feb0c4"));
-
-    /**
      * Java binding for the pattern described as PRIMORDIAL_COMMENT_PATTERN and identified by the following as UUID(s):
      * <ul>
      * <li>3734fb0a-4c14-5831-9a61-4743af609e7a
@@ -267,6 +254,19 @@ public class SnomedTerm {
     public static final Pattern PRIMORDIAL_SEMANTIC_VERSION_PATTERN = Pattern.make("PRIMORDIAL_SEMANTIC_VERSION_PATTERN", UUID.fromString("82f93e84-cee1-44bc-bb6d-4cc2a722048b"));
 
     /**
+     * Java binding for the pattern described as PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP_PATTERN and identified by the following as UUID(s):
+     * <ul>
+     * <li>945f0b1c-a201-40c3-89fb-ca633d175378
+     * </ul>
+     * <p>
+     * Pattern contains the following fields
+     * <ul>
+     * <li>Field 0 is a PRIMORDIAL_COMPONENT_ID_DISPLAY_SET that represents PRIMORDIAL_GMDN_SIMPLE_MAP_TERM.
+     * </ul>
+     */
+    public static final Pattern PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP_PATTERN = Pattern.make("PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP_PATTERN", UUID.fromString("945f0b1c-a201-40c3-89fb-ca633d175378"));
+
+    /**
      * Java binding for the pattern described as PRIMORDIAL_SOLOR_CONCEPT_ASSEMBLAGE_SOLOR and identified by the following as UUID(s):
      * <ul>
      * <li>d39b3ecd-9a80-5009-a8ac-0b947f95ca7c
@@ -398,38 +398,6 @@ public class SnomedTerm {
     public static final Pattern PRIMORDIAL_VERSION_CONTROL_PATH_PATTERN = Pattern.make("PRIMORDIAL_VERSION_CONTROL_PATH_PATTERN", UUID.fromString("add1db57-72fe-53c8-a528-1614bda20ec6"));
 
     /**
-     * Java binding for the concept described as GMDN_CODE and identified by the following UUID(s):
-     * <ul>
-     * <li>0625b982-8f35-4348-906d-e10ce9d2d979
-     * </ul>
-     */
-    public static final Concept GMDN_CODE = Concept.make("GMDN_CODE", UUID.fromString("0625b982-8f35-4348-906d-e10ce9d2d979"));
-
-    /**
-     * Java binding for the concept described as GMDN_MODEL_CONCEPTS and identified by the following UUID(s):
-     * <ul>
-     * <li>d74986f9-3581-408a-8d3e-5658dfcd8773
-     * </ul>
-     */
-    public static final Concept GMDN_MODEL_CONCEPTS = Concept.make("GMDN_MODEL_CONCEPTS", UUID.fromString("d74986f9-3581-408a-8d3e-5658dfcd8773"));
-
-    /**
-     * Java binding for the concept described as GMDN_SNOMED_TO_GMDN_SIMPLE_MAPPING and identified by the following UUID(s):
-     * <ul>
-     * <li>cfefb245-a6b6-4234-b248-1a05faea65c9
-     * </ul>
-     */
-    public static final Concept GMDN_SNOMED_TO_GMDN_SIMPLE_MAPPING = Concept.make("GMDN_SNOMED_TO_GMDN_SIMPLE_MAPPING", UUID.fromString("cfefb245-a6b6-4234-b248-1a05faea65c9"));
-
-    /**
-     * Java binding for the concept described as GMDN_TERMS and identified by the following UUID(s):
-     * <ul>
-     * <li>090a377d-aa19-4429-8afd-87dbb9e3b8ab
-     * </ul>
-     */
-    public static final Concept GMDN_TERMS = Concept.make("GMDN_TERMS", UUID.fromString("090a377d-aa19-4429-8afd-87dbb9e3b8ab"));
-
-    /**
      * Java binding for the concept described as PRIMORDIAL and identified by the following UUID(s):
      * <ul>
      * <li>c2012321-3903-532e-8a5f-b13e4ca46e86
@@ -536,10 +504,10 @@ public class SnomedTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHOR and identified by the following UUID(s):
      * <ul>
-     * <li>337e93ba-531b-59a4-8153-57dca00e58d2
+     * <li>f7495b58-6630-3499-a44e-2052b5fcf06c
      * </ul>
      */
-    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("337e93ba-531b-59a4-8153-57dca00e58d2"));
+    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHORS and identified by the following UUID(s):
@@ -1650,20 +1618,28 @@ public class SnomedTerm {
     public static final Concept PRIMORDIAL_GERMAN_LANGUAGE = Concept.make("PRIMORDIAL_GERMAN_LANGUAGE", UUID.fromString("5f144b18-76a8-5c7e-8480-55a5030d707f"));
 
     /**
-     * Java binding for the concept described as PRIMORDIAL_GMDN and identified by the following UUID(s):
-     * <ul>
-     * <li>c0a2d104-7eed-44b7-af11-733626e26238
-     * </ul>
-     */
-    public static final Concept PRIMORDIAL_GMDN = Concept.make("PRIMORDIAL_GMDN", UUID.fromString("c0a2d104-7eed-44b7-af11-733626e26238"));
-
-    /**
      * Java binding for the concept described as PRIMORDIAL_GMDN_AGENCY and identified by the following UUID(s):
      * <ul>
-     * <li>e79389cc-8b68-46da-a2e6-8ec7faf9b7b5
+     * <li>7160bb53-1110-4643-90a9-9d35198950e6
      * </ul>
      */
-    public static final Concept PRIMORDIAL_GMDN_AGENCY = Concept.make("PRIMORDIAL_GMDN_AGENCY", UUID.fromString("e79389cc-8b68-46da-a2e6-8ec7faf9b7b5"));
+    public static final Concept PRIMORDIAL_GMDN_AGENCY = Concept.make("PRIMORDIAL_GMDN_AGENCY", UUID.fromString("7160bb53-1110-4643-90a9-9d35198950e6"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_GMDN_MODEL_CONCEPT and identified by the following UUID(s):
+     * <ul>
+     * <li>4ad65aff-4765-43f3-88f9-8c7e82850807
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_GMDN_MODEL_CONCEPT = Concept.make("PRIMORDIAL_GMDN_MODEL_CONCEPT", UUID.fromString("4ad65aff-4765-43f3-88f9-8c7e82850807"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_GMDN_SIMPLE_MAP_TERM and identified by the following UUID(s):
+     * <ul>
+     * <li>a1b15dbd-dfd0-4120-86f4-b9f39f4de205
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_GMDN_SIMPLE_MAP_TERM = Concept.make("PRIMORDIAL_GMDN_SIMPLE_MAP_TERM", UUID.fromString("a1b15dbd-dfd0-4120-86f4-b9f39f4de205"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_GREATER_THAN and identified by the following UUID(s):
@@ -2435,10 +2411,10 @@ public class SnomedTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_PATH and identified by the following UUID(s):
      * <ul>
-     * <li>e95b6718-f824-5540-817b-8e79544eb97a
+     * <li>ad3dd2dd-ddb0-584c-bea4-c6d9b91d461f
      * </ul>
      */
-    public static final Concept PRIMORDIAL_PATH = Concept.make("PRIMORDIAL_PATH", UUID.fromString("e95b6718-f824-5540-817b-8e79544eb97a"));
+    public static final Concept PRIMORDIAL_PATH = Concept.make("PRIMORDIAL_PATH", UUID.fromString("ad3dd2dd-ddb0-584c-bea4-c6d9b91d461f"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_PATH_CONCEPT and identified by the following UUID(s):
@@ -2931,6 +2907,14 @@ public class SnomedTerm {
      * </ul>
      */
     public static final Concept PRIMORDIAL_SIGNED_INTEGER = Concept.make("PRIMORDIAL_SIGNED_INTEGER", UUID.fromString("1d1c2073-d98b-3dd3-8aad-a19c65aa5a0c"));
+
+    /**
+     * Java binding for the concept described as PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP and identified by the following UUID(s):
+     * <ul>
+     * <li>a9b59baf-ec71-46e3-8fe8-17f233aa2de4
+     * </ul>
+     */
+    public static final Concept PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP = Concept.make("PRIMORDIAL_SNOMED_TO_GMDN_SIMPLE_MAP", UUID.fromString("a9b59baf-ec71-46e3-8fe8-17f233aa2de4"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_SNOROCKET_CLASSIFIER and identified by the following UUID(s):
