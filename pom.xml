@@ -19,10 +19,9 @@
     <name>SNOMED CT Data</name>
 
     <modules>
-        <module>snomed-ct-origin</module>
         <module>plugin</module>
+        <module>snomed-ct-origin</module>
         <module>snomed-ct-starterdata</module>
-<!--        <module>snomed-ct-binding</module>-->
         <module>snomed-ct-pipeline</module>
         <module>snomed-ct-owl-transform</module>
         <module>snomed-ct-reasoner</module>
@@ -79,7 +78,7 @@
         <tinkar-starter-data.groupId>dev.ikm.data.tinkar</tinkar-starter-data.groupId>
         <tinkar-starter-data.artifactId>tinkar-starter-data</tinkar-starter-data.artifactId>
         <tinkar-starter-data.classifier>unreasoned-pb</tinkar-starter-data.classifier>
-        <tinkar-starter-data.version>20250813</tinkar-starter-data.version>
+        <tinkar-starter-data.version>20250827</tinkar-starter-data.version>
         <!-- reasoner options (ElkOwlReasoner, ElkSnomedReasoner, HybridReasoner)-->
         <reasoner-type>ElkSnomedReasoner</reasoner-type>
     </properties>

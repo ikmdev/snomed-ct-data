@@ -29,7 +29,7 @@ public class AxiomSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testAxiomSemantics() throws IOException {
-        String baseDir = "../snomed-ct-origin/target/origin-sources";
+        String baseDir = "../snomed-ct-pipeline/target/src";
         String errorFile = "target/failsafe-reports/axioms_not_found.txt";
 
         String absolutePath = findFilePath(baseDir, "sct2_srefset_owl");
