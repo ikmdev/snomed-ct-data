@@ -237,7 +237,6 @@
         <dependency>
             <groupId>dev.ikm.tinkar</groupId>
             <artifactId>terms</artifactId>
-            <version>${tinkar-core.version}</version>
         </dependency>
     </dependencies>
 

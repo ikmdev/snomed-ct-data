@@ -190,7 +190,6 @@
                 <artifactId>elk-snomed-test</artifactId>
                 <version>${elk-snomed-test.version}</version>
             </dependency>
-            
             <dependency>
                 <groupId>${tinkar-starter-data.groupId}</groupId>
                 <artifactId>${tinkar-starter-data.artifactId}</artifactId>
