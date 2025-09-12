@@ -26,7 +26,7 @@ public class ConceptSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testConceptSemantics() throws IOException {
-        String sourceFilePath = "../snomed-ct-origin/target/origin-sources";
+        String sourceFilePath = "../snomed-ct-pipeline/target/src";
         String errorFile = "target/failsafe-reports/concepts_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "sct2_concept");

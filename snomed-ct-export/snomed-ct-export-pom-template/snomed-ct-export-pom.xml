@@ -32,8 +32,4 @@
         <!-- OSSRH Related Developer (End) -->
     </developers>
 
-    <scm>
-        <url>${project.scm.url}</url>
-    </scm>
-
 </project>
