@@ -18,7 +18,7 @@ public final class IntegrationTestUtils {
     }
 
     public static Path findOriginPath(String... keywords) {
-        try (Stream<Path> stream = Files.walk(Path.of("..", "snomed-ct-origin", "target", "origin-sources"))
+        try (Stream<Path> stream = Files.walk(Path.of("..", "snomed-ct-pipeline", "target", "src"))
                 .filter(Files::isDirectory)
                 .filter(path -> Stream.of(keywords).allMatch(keyword -> path.toFile().getPath().contains(keyword)))) {
             Path directory = stream.findFirst().orElseThrow();

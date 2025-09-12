@@ -27,7 +27,7 @@ public class IdentifierSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testIdentifierSemantics() throws IOException {
-        String sourceFilePath = "../snomed-ct-origin/target/origin-sources";
+        String sourceFilePath = "../snomed-ct-pipeline/target/src";
         String errorFile = "target/failsafe-reports/identifiers_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "sct2_identifier");

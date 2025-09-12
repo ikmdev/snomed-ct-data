@@ -31,7 +31,7 @@ public class DefinitionSemanticIT extends AbstractIntegrationTest {
      */
     @Test
     public void testDefinitionSemantics() throws IOException {
-        String sourceFilePath = "../snomed-ct-origin/target/origin-sources";
+        String sourceFilePath = "../snomed-ct-pipeline/target/src";
         String errorFile = "target/failsafe-reports/descriptions_definitions_not_found.txt";
 
         String absolutePath = findFilePath(sourceFilePath, "sct2_textdefinition");
