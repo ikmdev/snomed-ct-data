@@ -9,10 +9,16 @@
 
     <groupId>dev.ikm.maven</groupId>
     <artifactId>snomed-ct-starterdata</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>snomed-ct-starterdata</name>
     <url>http://maven.apache.org</url>
+
+    <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <build>
         <plugins>
@@ -53,7 +59,7 @@
                 <executions>
                     <execution>
                         <id>copy-tinkar-starter-data-dependency</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -71,29 +77,138 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download-java-term-forge-template</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>dev.ikm.binding.forge.template</groupId>
+                                    <artifactId>term-java</artifactId>
+                                    <version>1.2.0</version>
+                                    <type>ftl</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/template</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>dev.ikm.maven.tinkar</groupId>
                 <artifactId>tinkar-maven-plugin</artifactId>
                 <version>${maven-artifacts.version}</version>
-                <configuration>
-                    <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
-                    <fileset>
-                        <directory>${dataStoreLocation}/input-data</directory>
-                        <includes>
-                            <include>**/*-${tinkar-starter-data.classifier}.zip</include>
-                        </includes>
-                    </fileset>
-                    <isolate>false</isolate>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>load-data</id>
-                        <phase>install</phase>
+                        <id>load-data-tinkar-starter-set</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>load-data</goal>
                         </goals>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${dataStoreLocation}/input-data</directory>
+                                <includes>
+                                    <include>**/*-${tinkar-starter-data.classifier}.zip</include>
+                                </includes>
+                            </fileset>
+                            <isolate>false</isolate>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>load-data-snomed-gmdn-starter-set</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>load-data</goal>
+                        </goals>
+                        <configuration>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <fileset>
+                                <directory>${maven.multiModuleProjectDirectory}/starter-data</directory>
+                                <includes>
+                                    <include>*.zip</include>
+                                </includes>
+                            </fileset>
+                            <isolate>false</isolate>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>forge-binding</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-binding</goal>
+                        </goals>
+                        <configuration>
+                            <isolate>false</isolate>
+                            <bindingOutput>src/main/java/dev/ikm/maven/SnomedTerm.java</bindingOutput>
+                            <templateFile>term-java-1.2.0.ftl</templateFile>
+                            <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
+                            <stringVariables>
+                                <stringVariable>
+                                    <name>package</name>
+                                    <value>dev.ikm.maven</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>author</name>
+                                    <value>SNOMED-CT Author</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>className</name>
+                                    <value>SnomedTerm</value>
+                                </stringVariable>
+                                <stringVariable>
+                                    <name>namespace</name>
+                                    <value>${origin.namespace}</value>
+                                </stringVariable>
+                            </stringVariables>
+                            <filter>
+<!--                                <memberships>-->
+<!--                                    <membership>-->
+<!--                                        <bindingName>TINKAR_BASE_MODEL_COMPONENT_PATTERN</bindingName>-->
+<!--                                    </membership>-->
+<!--                                </memberships>-->
+                                <statuses>
+                                    <status>
+                                        <bindingName>ACTIVE_STATE</bindingName>
+                                    </status>
+                                    <status>
+                                        <bindingName>INACTIVE_STATE</bindingName>
+                                    </status>
+                                </statuses>
+                                <path>
+                                    <bindingName>DEVELOPMENT_PATH</bindingName>
+                                </path>
+                                <useInferredDefinitions>true</useInferredDefinitions>
+                                <language>
+                                    <bindingName>ENGLISH_LANGUAGE</bindingName>
+                                </language>
+                                <descriptionPattern>
+                                    <bindingName>DESCRIPTION_PATTERN</bindingName>
+                                </descriptionPattern>
+                                <descriptionTypePreferences>
+                                    <descriptionTypePreference>
+                                        <bindingName>REGULAR_NAME_DESCRIPTION_TYPE</bindingName>
+                                    </descriptionTypePreference>
+                                    <descriptionTypePreference>
+                                        <bindingName>FULLY_QUALIFIED_NAME_DESCRIPTION_TYPE</bindingName>
+                                    </descriptionTypePreference>
+                                </descriptionTypePreferences>
+                                <dialectPreferences>
+                                    <dialectPreference>
+                                        <bindingName>US_ENGLISH_DIALECT</bindingName>
+                                    </dialectPreference>
+                                    <dialectPreference>
+                                        <bindingName>GB_ENGLISH_DIALECT</bindingName>
+                                    </dialectPreference>
+                                </dialectPreferences>
+                            </filter>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -117,4 +232,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.ikm.tinkar</groupId>
+            <artifactId>terms</artifactId>
+            <version>${tinkar-core.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
