@@ -130,9 +130,9 @@
                         <configuration>
                             <dataStore>${dataStoreLocation}/${dataStore}</dataStore>
                             <fileset>
-                                <directory>${starterSetLocation}</directory>
+                                <directory>${maven.multiModuleProjectDirectory}/starter-data</directory>
                                 <includes>
-                                    <include>**/${starterSet}</include>
+                                    <include>*.zip</include>
                                 </includes>
                             </fileset>
                             <isolate>false</isolate>
