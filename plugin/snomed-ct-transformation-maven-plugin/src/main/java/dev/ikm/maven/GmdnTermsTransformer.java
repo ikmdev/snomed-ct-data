@@ -71,11 +71,11 @@ public class GmdnTermsTransformer extends AbstractTransformer {
                                 .caseSignificance(TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
                         )
                         .attach((Identifier identifier) -> identifier
-                                .source(SnomedTerm.PRIMORDIAL_GMDN_TERMS)
+                                .source(SnomedTerm.GMDN_TERMS)
                                 .identifier(gmdnTerm.termCode())
                         )
                         .attach((StatedAxiom statedAxiom) -> statedAxiom
-                                .isA(SnomedTerm.PRIMORDIAL_GMDN_TERMS)
+                                .isA(SnomedTerm.GMDN_TERMS)
                         )
                 );
             });
