@@ -28,13 +28,13 @@
     </properties>
 
     <!-- Distribution info for private assets repo in Nexus -->
-    <distributionManagement>
-        <repository>
-            <id>nexus</id>
-            <name>private-assets-nexus</name>
-            <url>${deployNexusURL}</url>
-        </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>nexus</id>-->
+<!--            <name>private-assets-nexus</name>-->
+<!--            <url>${deployNexusURL}</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
     <build>
         <plugins>
