@@ -102,7 +102,6 @@
             <plugin>
                 <groupId>dev.ikm.maven.tinkar</groupId>
                 <artifactId>tinkar-maven-plugin</artifactId>
-                <version>${maven-artifacts.version}</version>
                 <executions>
                     <execution>
                         <id>load-data-tinkar-starter-set</id>
@@ -215,7 +214,6 @@
             <plugin>
                 <groupId>dev.ikm.maven</groupId>
                 <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
                 <configuration>
                     <namespaceString>${origin.namespace}</namespaceString>
                     <datastorePath>${dataStoreLocation}/${dataStore}</datastorePath>
@@ -237,7 +235,6 @@
         <dependency>
             <groupId>dev.ikm.tinkar</groupId>
             <artifactId>terms</artifactId>
-            <version>${tinkar-core.version}</version>
         </dependency>
     </dependencies>
 

@@ -35,6 +35,8 @@ public class SnomedUtility {
 
     private static final Logger LOG = LoggerFactory.getLogger(SnomedUtility.class.getSimpleName());
 
+    public static final Concept GUDID_GMDN_TERMS = Concept.make("GUDID_GMDN_TERMS", UUID.fromString("73257f7e-da60-4f6e-9459-e8cc6e6f8312"));
+
     /**
      * taking time stamp and making it an epoch
      * @param effectiveTime String representation dates in yyyyMMdd format

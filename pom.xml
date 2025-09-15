@@ -3,14 +3,14 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>dev.ikm.build</groupId>
         <artifactId>java-parent</artifactId>
         <version>1.64.0</version>
         <relativePath/>
     </parent>
-    
+
     <groupId>dev.ikm.snomedct</groupId>
     <artifactId>snomed-ct-data</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -34,7 +34,6 @@
         <maven-artifacts.version>1.35.0</maven-artifacts.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
-        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <maven-clean-plugin.version>3.3.1</maven-clean-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <!-- origin -->
@@ -44,8 +43,8 @@
         <gmdn.mapping.source.zip>${user.home}/Downloads/SnomedCT_GMDNMapRelease_PRODUCTION_20250331T120000Z.zip</gmdn.mapping.source.zip>
         <gmdn.device.source.zip>${user.home}/Downloads/gmdnData25_7.zip</gmdn.device.source.zip>
         <dataStoreLocation>${project.basedir}/../target</dataStoreLocation>
-        <dataStore>snomedct-international</dataStore>   
-        
+        <dataStore>snomedct-international</dataStore>
+
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
         <java.version>23</java.version>
@@ -67,7 +66,6 @@
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <jupiter.version>5.12.2</jupiter.version>
-        <snomed-ct-starterdata-maven-plugin.version>1.0.0-SNAPSHOT</snomed-ct-starterdata-maven-plugin.version>
         <elk-snomed-test.version>0.38.1</elk-snomed-test.version>
         <!-- origin -->
         <packager.name>IKM Dev</packager.name>
@@ -85,6 +83,16 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>dev.ikm.maven</groupId>
+                <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.maven</groupId>
+                <artifactId>snomed-ct-starterdata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>dev.ikm.tinkar</groupId>
                 <artifactId>entity-provider</artifactId>
@@ -190,7 +198,6 @@
                 <artifactId>elk-snomed-test</artifactId>
                 <version>${elk-snomed-test.version}</version>
             </dependency>
-            
             <dependency>
                 <groupId>${tinkar-starter-data.groupId}</groupId>
                 <artifactId>${tinkar-starter-data.artifactId}</artifactId>
@@ -204,36 +211,31 @@
                 <artifactId>lucene-queryparser</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-queries</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-core</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-suggest</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-backward-codecs</artifactId>
                 <version>${lucene.version}</version>
-            </dependency>             
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -266,11 +268,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven-dependency-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>${maven-clean-plugin.version}</version>
                 </plugin>
@@ -282,15 +279,49 @@
                 <plugin>
                     <groupId>dev.ikm.maven</groupId>
                     <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
-                    <version>${snomed-ct-starterdata-maven-plugin.version}</version>
+                    <version>${project.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>dev.ikm.maven</groupId>
+                    <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                    <version>${project.version}</version>
                 </plugin>
                 <!-- Skip Staging Plugin -->
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <inherited>false</inherited>
-                </plugin>            
+                    <configuration>
+                        <skipPublishing>false</skipPublishing>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.7.2</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <!-- Skip Enforcer Rule -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-no-bad-sections</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Don't enforce SemVer for this project -->
+                            <rulesToSkip>requireProperty</rulesToSkip>
+                            <failIfNoRules>false</failIfNoRules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
+
 </project>
