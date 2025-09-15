@@ -34,7 +34,6 @@
         <maven-artifacts.version>1.35.0</maven-artifacts.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
-        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <maven-clean-plugin.version>3.3.1</maven-clean-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <!-- origin -->
@@ -67,7 +66,6 @@
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
         <jupiter.version>5.12.2</jupiter.version>
-        <snomed-ct-starterdata-maven-plugin.version>1.0.0-SNAPSHOT</snomed-ct-starterdata-maven-plugin.version>
         <elk-snomed-test.version>0.38.1</elk-snomed-test.version>
         <!-- origin -->
         <packager.name>IKM Dev</packager.name>
@@ -85,6 +83,16 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>dev.ikm.maven</groupId>
+                <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.ikm.maven</groupId>
+                <artifactId>snomed-ct-starterdata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>dev.ikm.tinkar</groupId>
                 <artifactId>entity-provider</artifactId>
@@ -203,31 +211,26 @@
                 <artifactId>lucene-queryparser</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-queries</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-core</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-suggest</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-backward-codecs</artifactId>
@@ -265,11 +268,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven-dependency-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>${maven-clean-plugin.version}</version>
                 </plugin>
@@ -281,7 +279,12 @@
                 <plugin>
                     <groupId>dev.ikm.maven</groupId>
                     <artifactId>snomed-ct-starterdata-maven-plugin</artifactId>
-                    <version>${snomed-ct-starterdata-maven-plugin.version}</version>
+                    <version>${project.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>dev.ikm.maven</groupId>
+                    <artifactId>snomed-ct-transformation-maven-plugin</artifactId>
+                    <version>${project.version}</version>
                 </plugin>
                 <!-- Skip Staging Plugin -->
                 <plugin>
