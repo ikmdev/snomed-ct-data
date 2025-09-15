@@ -38,7 +38,7 @@
 
     <profiles>
         <profile>
-            <id>generateData</id>
+            <id>generateDataLocal</id>
             <activation>
                 <property>
                     <name>deployToNexus</name>
