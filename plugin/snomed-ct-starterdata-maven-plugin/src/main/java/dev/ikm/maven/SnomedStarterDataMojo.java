@@ -34,6 +34,8 @@ import static dev.ikm.tinkar.terms.TinkarTerm.ENGLISH_LANGUAGE;
 @Mojo(name = "run-snomed-starterdata", defaultPhase = LifecyclePhase.INSTALL)
 public class SnomedStarterDataMojo extends AbstractMojo
 {
+    private static final EntityProxy.Concept GUDID_GMDN_TERMS = EntityProxy.Concept.make("GUDID_GMDN_TERMS", UUID.fromString("73257f7e-da60-4f6e-9459-e8cc6e6f8312"));
+
     @Parameter(property = "origin.namespace", required = true)
     String namespaceString;
     @Parameter(property = "datastorePath", required = true)
@@ -113,7 +115,7 @@ public class SnomedStarterDataMojo extends AbstractMojo
                     )
             );
 
-            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Terms", GudidTerm.GUDID_GMDN_TERMS);
+            EntityProxy.Concept gmdnIdentifier = EntityProxy.Concept.make("GMDN Terms", GUDID_GMDN_TERMS);
             session.compose((ConceptAssembler concept) -> concept
                     .concept(gmdnIdentifier)
                     .attach((FullyQualifiedName fqn) -> fqn

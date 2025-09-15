@@ -6,64 +6,31 @@
         <groupId>dev.ikm.snomedct</groupId>
         <artifactId>snomed-ct-data</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>snomed-ct-origin</artifactId>
+    <groupId>${data-artifact.groupId}</groupId>
+    <artifactId>${data-artifact.artifactId}</artifactId>
+    <version>${data-artifact.version}</version>
     <packaging>pom</packaging>
 
     <name>snomed-ct-origin</name>
 
-    <!-- Properties For Deploying Zip To Nexus -->
-
     <properties>
         <data-artifact.groupId>dev.ikm.data.snomedct</data-artifact.groupId>
         <data-artifact.artifactId>snomedct-origin</data-artifact.artifactId>
-        <data-artifact.filename>${data-artifact.path-prefix}</data-artifact.filename>
         <data-artifact.version>${dataStore}-${source.version}+1.0.0-SNAPSHOT</data-artifact.version>
-        <data-artifact.prefix>${project.artifactId}-${project.version}</data-artifact.prefix>
-        <data-artifact.path-prefix>${project.build.directory}/${data-artifact.prefix}</data-artifact.path-prefix>
-        <deployNexusURL>https://nexus.tinkarbuild.com/repository/maven-snapshots/</deployNexusURL>
-        <deployToNexus>false</deployToNexus>
     </properties>
-
-    <!-- Distribution info for private assets repo in Nexus -->
-    <distributionManagement>
-        <repository>
-            <id>nexus</id>
-            <name>private-assets-nexus</name>
-            <url>${deployNexusURL}</url>
-        </repository>
-    </distributionManagement>
 
     <profiles>
         <profile>
-            <id>generateData</id>
+            <id>generateDataLocal</id>
             <activation>
                 <property>
-                    <name>deployToNexus</name>
-                    <value>true</value>
+                    <name>altDeploymentRepository</name>
                 </property>
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>templating-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>inject-maven-properties</id>
-                                <goals>
-                                    <goal>filter-sources</goal>
-                                </goals>
-                                <configuration>
-                                    <sourceDirectory>snomed-ct-origin-pom-template</sourceDirectory>
-                                    <outputDirectory>${project.build.directory}</outputDirectory>
-                                    <skipPoms>false</skipPoms>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <!-- Unzip source data -->
                     <plugin>
                         <groupId>dev.ikm.maven.tinkar</groupId>
@@ -110,6 +77,25 @@
                                     <originURL>${origin.url}</originURL>
                                     <originNamespace>${origin.namespace}</originNamespace>
                                     <outputDirectory>${origin.working.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>flatten-test</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>flatten</goal>
+                                </goals>
+                                <configuration>
+                                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                                    <updatePomFile>true</updatePomFile>
+                                    <keepCommentsInPom>true</keepCommentsInPom>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -172,34 +158,10 @@
                                 <configuration>
                                     <artifacts>
                                         <artifact>
-                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-data.zip
-                                            </file>
+                                            <file>${project.build.directory}/${project.artifactId}-${project.version}-data.zip</file>
                                             <type>zip</type>
                                         </artifact>
                                     </artifacts>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>deploy-origin-data</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>deploy-file</goal>
-                                </goals>
-                                <configuration>
-                                    <repositoryId>nexus</repositoryId>
-                                    <url>${deployNexusURL}</url>
-                                    <groupId>${data-artifact.groupId}</groupId>
-                                    <artifactId>${data-artifact.artifactId}</artifactId>
-                                    <version>${data-artifact.version}</version>
-                                    <pomFile>${project.build.directory}/snomed-ct-origin-pom.xml</pomFile>
-                                    <file>${data-artifact.filename}-data.zip</file>
-                                    <packaging>zip</packaging>
                                 </configuration>
                             </execution>
                         </executions>
