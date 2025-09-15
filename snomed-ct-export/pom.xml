@@ -19,7 +19,6 @@
         <data-artifact.groupId>dev.ikm.tinkar.data</data-artifact.groupId>
         <data-artifact.artifactId>${dataStore}</data-artifact.artifactId>
         <data-artifact.version>${source.version}+1.0.0-SNAPSHOT</data-artifact.version>
-        <deployToNexus>false</deployToNexus>
     </properties>
 
     <profiles>
