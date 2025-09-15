@@ -25,7 +25,7 @@ jobs:
       - name: Maven Settings File
         uses: whelk-io/maven-settings-xml-action@v22
         with:
-          servers: '[{"id": "tinkar-nexus-private", "username": "admin", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
+          servers: '[{"id": "tinkar-nexus-private", "username": "fda-data-team", "password": "FDA_DATA_2025"}]'
           mirrors: '[{"id": "tinkar-nexus-private", "mirrorOf": "*", "url": "https://nexus.tinkarbuild.com/repository/maven-private/"}]'
           repositories: '
             [
