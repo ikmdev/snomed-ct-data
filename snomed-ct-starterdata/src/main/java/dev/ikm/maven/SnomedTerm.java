@@ -154,6 +154,14 @@ public class SnomedTerm {
     public static final Pattern PRIMORDIAL_INFERRED_NAVIGATION_PATTERN = Pattern.make("PRIMORDIAL_INFERRED_NAVIGATION_PATTERN", UUID.fromString("a53cc42d-c07e-5934-96b3-2ede3264474e"));
 
     /**
+     * Java binding for the pattern described as PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN and identified by the following as UUID(s):
+     * <ul>
+     * <li>bbbbf1fe-00f0-55e0-a19c-6300dbaab9b2
+     * </ul>
+     */
+    public static final Pattern PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN = Pattern.make("PRIMORDIAL_KOMET_BASE_MODEL_COMPONENT_PATTERN", UUID.fromString("bbbbf1fe-00f0-55e0-a19c-6300dbaab9b2"));
+
+    /**
      * Java binding for the pattern described as PRIMORDIAL_ORIGINS_PATTERN and identified by the following as UUID(s):
      * <ul>
      * <li>536b0ec4-4974-47ae-93a6-ae6c4d169780
@@ -504,10 +512,10 @@ public class SnomedTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHOR and identified by the following UUID(s):
      * <ul>
-     * <li>f7495b58-6630-3499-a44e-2052b5fcf06c
+     * <li>337e93ba-531b-59a4-8153-57dca00e58d2
      * </ul>
      */
-    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c"));
+    public static final Concept PRIMORDIAL_AUTHOR = Concept.make("PRIMORDIAL_AUTHOR", UUID.fromString("337e93ba-531b-59a4-8153-57dca00e58d2"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_AUTHORS and identified by the following UUID(s):
@@ -1141,10 +1149,10 @@ public class SnomedTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_TYPE and identified by the following UUID(s):
      * <ul>
-     * <li>a00c5ad7-5b8a-5592-a28c-64057dd3caab
+     * <li>ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb
      * </ul>
      */
-    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("a00c5ad7-5b8a-5592-a28c-64057dd3caab"));
+    public static final Concept PRIMORDIAL_DESCRIPTION_TYPE = Concept.make("PRIMORDIAL_DESCRIPTION_TYPE", UUID.fromString("ad0c19e8-2ccc-59c1-8b7e-c56c03aca8eb"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_DESCRIPTION_VERSION_PROPERTIES and identified by the following UUID(s):
@@ -2040,10 +2048,10 @@ public class SnomedTerm {
     /**
      * Java binding for the concept described as PRIMORDIAL_LANGUAGE and identified by the following UUID(s):
      * <ul>
-     * <li>b0ad4d77-e1bc-5fd1-922e-5fad675e9bfd
+     * <li>f56fa231-10f9-5e7f-a86d-a1d61b5b56e3
      * </ul>
      */
-    public static final Concept PRIMORDIAL_LANGUAGE = Concept.make("PRIMORDIAL_LANGUAGE", UUID.fromString("b0ad4d77-e1bc-5fd1-922e-5fad675e9bfd"));
+    public static final Concept PRIMORDIAL_LANGUAGE = Concept.make("PRIMORDIAL_LANGUAGE", UUID.fromString("f56fa231-10f9-5e7f-a86d-a1d61b5b56e3"));
 
     /**
      * Java binding for the concept described as PRIMORDIAL_LANGUAGE_COORDINATE_NAME and identified by the following UUID(s):
