@@ -40,12 +40,12 @@ More information can be found on: https://www.nlm.nih.gov/healthit/snomedct/inde
 
    To deploy origin artifact to a shared Nexus repository, run the following command, specifying the repository ID and URL in `-DaltDeploymentRepository`
    ```
-   mvn clean deploy -f snomed-ct-origin -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
+   mvn --projects snomed-ct-origin --also-make clean deploy -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
    ```
 
    To install origin artifact to a local M2 repository, run the following command:
    ```
-   mvn clean install -f snomed-ct-origin -Ptinkarbuild,generateDataLocal -Dmaven.build.cache.enabled=false
+   mvn --projects snomed-ct-origin --also-make clean install -Ptinkarbuild,generateDataLocal -Dmaven.build.cache.enabled=false
    ```
 
 **Run Transformation Pipeline**
@@ -59,6 +59,6 @@ The transformation pipeline can be built after origin data is available in Nexus
    
 2. Deploy transformed data artifacts to Nexus, run the following command:
    ```
-   mvn deploy -f snomed-ct-export -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
+   mvn --projects snomed-ct-export --also-make deploy -Ptinkarbuild -DaltDeploymentRepository=tinkar-snapshot::https://nexus.tinkar.org/repository/maven-snapshots/ -Dmaven.build.cache.enabled=false
    ```
    
