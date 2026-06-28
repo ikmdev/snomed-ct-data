@@ -47,6 +47,7 @@
         <dependency>
             <groupId>dev.ikm.maven</groupId>
             <artifactId>snomed-ct-starterdata</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
